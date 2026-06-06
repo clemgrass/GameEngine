@@ -1,0 +1,1347 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.top-bar{padding:20px 0 0}
+.eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--color-text-tertiary);margin-bottom:6px}
+.doc-title{font-size:22px;font-weight:500;line-height:1.25;color:var(--color-text-primary);margin-bottom:8px}
+.doc-lead{font-size:14px;color:var(--color-text-secondary);line-height:1.6;max-width:560px;margin-bottom:20px}
+
+.nav-strip{display:flex;gap:4px;flex-wrap:wrap;padding:12px 0;border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:28px}
+.nb{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;border:0.5px solid transparent;background:transparent;color:var(--color-text-tertiary);cursor:pointer;transition:all .15s;white-space:nowrap;line-height:1}
+.nb:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-secondary)}
+.nb.on{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+
+.sec{display:none}
+.sec.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.sec-header{margin-bottom:24px}
+.sec-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--color-text-tertiary);margin-bottom:4px}
+.sec-title{font-size:18px;font-weight:500;line-height:1.3;color:var(--color-text-primary);margin-bottom:6px}
+.sec-intro{font-size:14px;color:var(--color-text-secondary);line-height:1.65}
+
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:28px 0 10px;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary)}
+h3:first-of-type{margin-top:0}
+
+p{font-size:13.5px;line-height:1.7;color:var(--color-text-secondary);margin-bottom:10px}
+p:last-child{margin-bottom:0}
+
+ul{list-style:none;padding:0;margin:0 0 12px}
+ul li{font-size:13px;color:var(--color-text-secondary);line-height:1.6;padding:3px 0 3px 16px;position:relative}
+ul li::before{content:'';position:absolute;left:0;top:10px;width:4px;height:4px;border-radius:50%;background:var(--color-border-secondary)}
+ul li strong{font-weight:500;color:var(--color-text-primary)}
+
+ol{padding-left:20px;margin:0 0 12px}
+ol li{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:6px;padding-left:4px}
+ol li strong{font-weight:500;color:var(--color-text-primary)}
+
+code{font-family:var(--font-mono,monospace);font-size:11.5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px}
+
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg,12px);padding:16px 18px}
+.card-title{font-size:13.5px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.card p{font-size:13px;margin-bottom:6px}
+.card ul{margin-bottom:0}
+.card ul li{font-size:12.5px}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;line-height:1.6;margin-right:4px;margin-bottom:4px}
+.pill-blue{background:#E6F1FB;color:#0C447C}
+.pill-green{background:#EAF3DE;color:#27500A}
+.pill-amber{background:#FAEEDA;color:#633806}
+.pill-red{background:#FCEBEB;color:#791F1F}
+.pill-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.pill-teal{background:#E1F5EE;color:#085041}
+.pill-purple{background:#EEEDFE;color:#3C3489}
+
+.callout{border-radius:var(--border-radius-md,8px);padding:13px 15px;margin:14px 0}
+.callout p{font-size:13px;margin:0;line-height:1.65}
+.callout-warn{background:#FAEEDA;border-left:2px solid #BA7517}
+.callout-warn p{color:#633806}
+.callout-info{background:#E6F1FB;border-left:2px solid #378ADD}
+.callout-info p{color:#0C447C}
+.callout-ok{background:#EAF3DE;border-left:2px solid #639922}
+.callout-ok p{color:#27500A}
+.callout-key{background:var(--color-background-secondary);border-left:2px solid var(--color-border-secondary)}
+.callout-key p{color:var(--color-text-primary)}
+
+.phase-block{border-left:2px solid var(--color-border-secondary);padding:0 0 4px 20px;margin-bottom:24px}
+.phase-block.p0{border-color:#1D9E75}
+.phase-block.p1{border-color:#378ADD}
+.phase-block.p2{border-color:#BA7517}
+.phase-block.p3{border-color:#7F77DD}
+.phase-block.p4{border-color:#D85A30}
+.phase-block.px{border-color:var(--color-border-secondary)}
+.phase-hed{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.phase-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.phase-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.phase-sub{font-size:12px;color:var(--color-text-tertiary)}
+
+.step-list{list-style:none;padding:0;margin:0 0 12px;counter-reset:steps}
+.step-list li{display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.step-list li:last-child{border-bottom:none}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;color:var(--color-text-secondary)}
+.step-body .card-title{margin-bottom:3px;font-size:13px}
+.step-body p{font-size:12.5px;color:var(--color-text-secondary)}
+
+.arch-layer{margin-bottom:16px}
+.arch-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;align-items:center}
+.arch-node{font-size:12px;font-weight:500;padding:5px 12px;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all .12s}
+.arch-node:hover{background:var(--color-background-primary);border-color:var(--color-border-primary);color:var(--color-text-primary)}
+.arch-node.hi{background:#E6F1FB;border-color:#85B7EB;color:#0C447C}
+.arch-sep{font-size:11px;color:var(--color-text-tertiary);padding:0 2px}
+
+.data-table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:12.5px}
+.data-table th{text-align:left;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-tertiary);padding:6px 10px;border-bottom:0.5px solid var(--color-border-secondary)}
+.data-table td{padding:9px 10px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;color:var(--color-text-secondary);line-height:1.5}
+.data-table td:first-child{font-weight:500;color:var(--color-text-primary)}
+.data-table tr:last-child td{border-bottom:none}
+
+.resource-list{list-style:none;padding:0;margin:0 0 14px}
+.resource-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.resource-list li:last-child{border-bottom:none}
+.res-icon{width:28px;height:28px;border-radius:6px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--color-text-tertiary);font-size:14px}
+.res-body{flex:1}
+.res-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.res-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 12px}
+
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:24px 0}
+
+.footer{padding:20px 0 4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:8px}
+.footer p{font-size:11px;color:var(--color-text-tertiary);text-align:center}
+
+.mastery{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-top:12px}
+.mastery-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--color-text-tertiary);margin-bottom:4px}
+.mastery p{font-size:12.5px;color:var(--color-text-secondary);margin:0}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+@media(max-width:480px){.two-col,.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+
+<h2 class="sr-only">CPU-First Game Engine — Complete Master Roadmap: 12 sections covering vision, market analysis, knowledge graph, learning phases, architecture, rendering, performance, tech stack, build order, specializations, reality check, and final path recommendations.</h2>
+
+<div class="top-bar">
+  <div class="eyebrow">Master Engineering Curriculum</div>
+  <div class="doc-title">CPU-First Game Engine Roadmap</div>
+  <div class="doc-lead">A complete professional guide — from foundations to expert optimization. 12 sections. No shortcuts. Built for deep understanding.</div>
+</div>
+
+<nav class="nav-strip" id="nav">
+  <button class="nb on" onclick="show(0)">1 · Vision</button>
+  <button class="nb" onclick="show(1)">2 · Market</button>
+  <button class="nb" onclick="show(2)">3 · Knowledge</button>
+  <button class="nb" onclick="show(3)">4 · Roadmap</button>
+  <button class="nb" onclick="show(4)">5 · Architecture</button>
+  <button class="nb" onclick="show(5)">6 · Rendering</button>
+  <button class="nb" onclick="show(6)">7 · Performance</button>
+  <button class="nb" onclick="show(7)">8 · Tech Stack</button>
+  <button class="nb" onclick="show(8)">9 · Build Order</button>
+  <button class="nb" onclick="show(9)">10 · Specializations</button>
+  <button class="nb" onclick="show(10)">11 · Reality Check</button>
+  <button class="nb" onclick="show(11)">12 · Final Path</button>
+</nav>
+
+<!-- ══════════════════════════════════════ S1 VISION ══════════════════════════════════════ -->
+<div class="sec on" id="s0">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 1</div>
+    <div class="sec-title">Vision &amp; Philosophy</div>
+    <div class="sec-intro">What a CPU-first engine actually means — and why the constraints are the point.</div>
+  </div>
+
+  <h3>What "CPU-first" actually means</h3>
+  <p>A CPU-first engine treats the processor as the primary rendering and simulation unit — not a command buffer dispenser for the GPU. The CPU owns the framebuffer, performs rasterization, runs the game simulation, manages all memory, and drives output. GPU involvement is optional and supplemental: for blitting the final framebuffer to screen, or minimal acceleration on integrated graphics.</p>
+  <p>This is fundamentally different from a "CPU-assisted GPU renderer." In GPU-first engines (every major modern engine), the CPU feeds draw calls and shader parameters to the GPU. In a CPU-first engine, the CPU <em>is</em> the renderer. The decision isn't about which is faster — it's about architectural ownership.</p>
+
+  <h3>Core philosophical pillars</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-box-seam" aria-hidden="true" style="font-size:15px;margin-right:6px;color:var(--color-text-tertiary)"></i>Constraint-driven design</div>
+      <p>Every architectural decision is forced by real hardware constraints. If a target machine has 2 GB RAM and an Intel HD 4000, that constraint shapes every subsystem. Constraints prevent feature creep and generate elegant solutions. PICO-8's 128×128 resolution and 16-color palette are not limitations — they are the design. Your potato target IS the spec.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-cpu" aria-hidden="true" style="font-size:15px;margin-right:6px;color:var(--color-text-tertiary)"></i>Performance by architecture</div>
+      <p>True performance doesn't come from micro-optimizing bad architecture — it comes from designing systems where the fast path is the default path. Data flows linearly through cache. Allocations happen at load time. The hot loop touches only what it needs. This is Carmack's philosophy, Muratori's Handmade thesis, and what made id Tech run on hardware it shouldn't have.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-scissors" aria-hidden="true" style="font-size:15px;margin-right:6px;color:var(--color-text-tertiary)"></i>Minimalism as correctness</div>
+      <p>A system is correct not when there is nothing left to add, but when there is nothing left to remove. Every abstraction layer costs memory, cycles, and comprehension. The engine should have zero layers that exist only for elegance. Every interface boundary must earn its existence through performance isolation or genuine platform abstraction.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-microscope" aria-hidden="true" style="font-size:15px;margin-right:6px;color:var(--color-text-tertiary)"></i>Deep understanding over convenience</div>
+      <p>You do not use a collision library. You understand why BVHs work, implement a simple AABB tree, and only reach for a library when you have exhausted your own understanding. The educational goal and the performance goal converge: knowing exactly what your code does lets you optimize it, debug it, and replace it.</p>
+    </div>
+  </div>
+
+  <h3>Advantages of CPU-first architecture</h3>
+  <ul>
+    <li><strong>Portability:</strong> Software rendering works on any target with a framebuffer — WebAssembly, embedded ARM, old netbooks. No GPU API compatibility nightmares.</li>
+    <li><strong>Determinism:</strong> CPU floating point behavior is far more controllable than GPU shader arithmetic. Reproducible simulations and replay systems become tractable.</li>
+    <li><strong>Debuggability:</strong> Every pixel value has a clear CPU-side cause. You can single-step through the rasterizer, inspect the z-buffer, watch a triangle being drawn.</li>
+    <li><strong>No API surface area:</strong> No OpenGL / Vulkan / Metal / D3D version fragmentation. No driver bugs. No shader compiler variance.</li>
+    <li><strong>Tiny runtime:</strong> No GPU context initialization. No shader compilation stall. Engine cold start in milliseconds.</li>
+    <li><strong>Memory ownership:</strong> You control every byte. No hidden GPU memory allocations, no VRAM budgets to track separately.</li>
+  </ul>
+
+  <h3>Disadvantages — be honest</h3>
+  <div class="callout callout-warn">
+    <p><strong>Raw throughput ceiling:</strong> A modern discrete GPU renders hundreds of millions of triangles per second. A highly optimized CPU software rasterizer on a good 8-core machine might push 5–15 million in real conditions. The gap is 1–2 orders of magnitude. You must design games where this doesn't matter: lower poly counts, orthographic or pseudo-3D views, 2D, or carefully bounded 3D scenes.</p>
+  </div>
+  <ul>
+    <li><strong>Resolution limits:</strong> Software rendering 1920×1080 at 60 fps with complex shading is genuinely hard. 640×360 or 720×480 upscaled is realistic for potato targets.</li>
+    <li><strong>Modern visual expectations:</strong> PBR, screen-space reflections, real-time GI — none are feasible. You will be making a stylistic choice as much as a technical one.</li>
+    <li><strong>Talent perception:</strong> Recruiters and some developers will not immediately understand the choice. The portfolio angle requires explanation.</li>
+  </ul>
+
+  <h3>Why modern engines ignore this niche</h3>
+  <p>Because the commercial incentive is photorealism. AAA games sell on visual fidelity. GPU manufacturers fund middleware. Graphics APIs like Vulkan and Metal exist to extract more performance from specialized silicon. The entire industry optimized around "more pixels, more polygons, better lighting" — not "runs on a 2012 laptop." That gap is your market.</p>
+
+  <h3>Realistic limits in 2026</h3>
+  <div class="callout callout-info">
+    <p>A modern x86 core can perform ~4–16 billion simple operations per second. With AVX2 SIMD, effective throughput for pixel filling is 8–32× higher. A 720×480 framebuffer is 345,600 pixels — at 60 fps you need 20.7M pixel writes/second, trivially achievable. The real constraint is work per pixel: lighting calculations, texture lookups (cache misses!), depth testing. SIMD rasterization at modest resolutions is well within range of any 4-core CPU from 2015.</p>
+  </div>
+
+  <h3>Games that benefit most</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">Simulation-heavy</div>
+      <p>Dwarf Fortress, RimWorld, Factorio. Most CPU budget goes to simulation, not rendering. CPU-first lets you allocate cores intelligently.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Retro-aesthetic</div>
+      <p>Doom-style FPS, pixel art RPGs, pseudo-3D racers. The visual constraint is a feature, not a limitation. Growing market on itch.io.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Accessible indie</div>
+      <p>Games intended for players without gaming hardware. "Runs on anything" is a genuine selling point in low-end hardware markets worldwide.</p>
+    </div>
+  </div>
+
+  <h3>What "performance by architecture" means in practice</h3>
+  <ul>
+    <li>Your renderer touches only visible pixels — culling happens before rasterization, not after.</li>
+    <li>Your simulation runs on contiguous arrays of plain data, not graphs of objects with vtables.</li>
+    <li>Your asset pipeline pre-processes everything at build time. The runtime loads and uses — it never converts, parses, or transforms.</li>
+    <li>Your allocator is bump-allocated per-frame scratch, not scattered <code>malloc/free</code>.</li>
+    <li>Your thread model has zero lock contention in the hot path. Synchronization happens at task boundaries, not inside loops.</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════ S2 MARKET ══════════════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 2</div>
+    <div class="sec-title">Market Analysis</div>
+    <div class="sec-intro">Who needs this, who builds comparable things, and whether it's viable.</div>
+  </div>
+
+  <h3>Competitive landscape</h3>
+  <div style="overflow-x:auto;margin-bottom:16px">
+  <table class="data-table">
+    <thead><tr><th style="min-width:100px">Engine / Tool</th><th>CPU-first?</th><th style="min-width:140px">Key differentiator</th><th>Weakness vs yours</th></tr></thead>
+    <tbody>
+      <tr><td>Godot 4</td><td><span class="pill pill-red">No — Vulkan/GLES</span></td><td>Node system, GDScript, free</td><td>Heavy runtime, no CPU renderer</td></tr>
+      <tr><td>Unity</td><td><span class="pill pill-red">No</span></td><td>Asset store, massive community</td><td>Runtime overhead, licensing cost, opaque internals</td></tr>
+      <tr><td>Unreal 5</td><td><span class="pill pill-red">No</span></td><td>Nanite, Lumen, cinematic quality</td><td>Minimum GPU requirements, complex, huge binary</td></tr>
+      <tr><td>raylib</td><td><span class="pill pill-amber">Partial</span></td><td>Simplicity, C API, no bloat</td><td>Library only, no software renderer, no ECS</td></tr>
+      <tr><td>SDL2 / SDL3</td><td><span class="pill pill-amber">Partial</span></td><td>Widest platform support</td><td>Library only, no game structure, no renderer</td></tr>
+      <tr><td>PICO-8</td><td><span class="pill pill-green">Yes</span></td><td>Extreme constraint, community</td><td>Proprietary, 128×128 only, no real cross-platform</td></tr>
+      <tr><td>TIC-80</td><td><span class="pill pill-green">Yes</span></td><td>Open-source PICO-8 alternative</td><td>Same constraints, limited distribution</td></tr>
+      <tr><td>Handmade Hero engine</td><td><span class="pill pill-green">Yes — fully from scratch</span></td><td>Deep understanding, no libraries</td><td>Not distributed as an engine, intentionally incomplete</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Is there a real niche?</h3>
+  <p>Yes — but it is specific. The niche is developers who want full control, understand what they're building, target low-end hardware, and value educational depth over rapid prototyping. This is not a mass market. It is, however, a coherent audience:</p>
+  <ul>
+    <li><strong>Retro / indie devs:</strong> Doom-aesthetic FPS, boomer shooters, pixel art games. Growing market on itch.io.</li>
+    <li><strong>Simulation devs:</strong> Games like Dwarf Fortress where CPU budget is better spent on world simulation. Many already use SDL + custom renderer.</li>
+    <li><strong>Educational use:</strong> University game programming courses, engine programming self-study. Handmade Hero has ~120K YouTube subscribers. Massive demand for "understand it from scratch."</li>
+    <li><strong>Low-end hardware markets:</strong> Southeast Asia, parts of Africa and Latin America have large gaming populations on low-spec hardware.</li>
+    <li><strong>Demoscene / technical art:</strong> Developers interested in fitting impressive things into tiny executables.</li>
+  </ul>
+
+  <h3>Why most engines become bloated</h3>
+  <ul>
+    <li><strong>Feature creep from user requests:</strong> Each individual request is reasonable; the aggregate is a monolith. Unity added C# scripting, Bolt, ML-Agents, URP, HDRP, DOTS — each reasonable, collectively incoherent.</li>
+    <li><strong>Abstraction inflation:</strong> Every layer added for "flexibility" costs runtime overhead and mental model complexity. Generic enough for everyone = optimized for no one.</li>
+    <li><strong>Historical baggage:</strong> Engines must maintain backward compatibility with 10-year-old projects. New architecture cannot replace old without breaking the install base.</li>
+    <li><strong>Talent rotation:</strong> Engineers join, add a system their way, leave. No single owner maintains coherent vision. Code entropy accelerates.</li>
+  </ul>
+
+  <h3>Business vs hobby viability</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">As a hobby / portfolio project</div>
+      <span class="pill pill-green">Highly viable</span>
+      <p style="margin-top:8px">Building this engine is one of the most impressive portfolio pieces possible for a systems or graphics engineering role. Engine programmers are scarce. Demonstrating you built a complete, performant, cross-platform system from near-scratch signals capability that no GitHub todo app can.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">As a commercial product</div>
+      <span class="pill pill-amber">Niche viable</span>
+      <p style="margin-top:8px">Not competing with Unity or Godot. Monetization paths: open-source with paid asset packs, a "fantasy console" product (like PICO-8's $15 model), educational licensing. A lovingly maintained niche tool can sustain its creator if the expectation isn't investor returns.</p>
+    </div>
+  </div>
+
+  <h3>What could genuinely differentiate this engine</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">First-class WASM + Web</div>
+      <p>Running natively in browsers with no GPU requirement. Share links, play instantly. No competitor does this well for CPU rendering.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Tiny executables</div>
+      <p>Sub-1MB game binaries. Technically impressive and marketable to demoscene-adjacent audiences.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Documented internals</div>
+      <p>Every system explained in the codebase. The best learning resource IS the engine. Handmade Hero's unique value — no one else does it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S3 KNOWLEDGE ══════════════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 3</div>
+    <div class="sec-title">Complete Knowledge Graph</div>
+    <div class="sec-intro">Every topic you need — with difficulty, prerequisites, and what "good enough" vs "expert" looks like. Organized into five dependency layers.</div>
+  </div>
+
+  <div class="tag-row">
+    <span class="pill pill-green">Foundational</span>
+    <span class="pill pill-blue">Core systems</span>
+    <span class="pill pill-amber">Advanced</span>
+    <span class="pill pill-red">Expert</span>
+  </div>
+
+  <h3>Layer 1 — Programming foundations</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Advanced C / C++ <span class="pill pill-green">Foundational</span></div>
+      <p>The engine lives here. Use C++ but resist its complexity gravity — prefer C-style code with thin C++ conveniences (constructors, references, templates where beneficial).</p>
+      <p><strong>Good enough:</strong> Pointers, structs, stack vs heap, value semantics, function pointers, basic templates.</p>
+      <p><strong>Expert:</strong> Undefined behavior, strict aliasing, memory model, compiler explorer fluency, ABI stability, placement new, constexpr everything, CRTP.</p>
+      <div class="callout callout-warn" style="margin-top:10px"><p><strong>Common trap:</strong> Overusing OOP/inheritance, virtual functions in hot paths, <code>std::shared_ptr</code> everywhere, not reading compiler output.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Memory management <span class="pill pill-blue">Core systems</span></div>
+      <p>Every allocation in a game engine is a performance decision. Understanding the heap, stack, virtual memory, and fragmentation lets you build allocators 10–100× faster than <code>malloc</code>.</p>
+      <p><strong>Good enough:</strong> Stack vs heap, malloc internals, fragmentation, basic arena allocator.</p>
+      <p><strong>Expert:</strong> TLSF allocator, slab allocators, buddy system, virtual memory mapping, huge pages, NUMA awareness.</p>
+      <p><strong>Implement:</strong> Arena allocator, pool allocator, frame allocator, header-tracked debug allocator.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">CPU architecture <span class="pill pill-amber">Advanced</span></div>
+      <p>You are targeting the CPU. Knowing what it does — pipelines, branch prediction, out-of-order execution, cache hierarchy — is not optional. Every optimization decision flows from this.</p>
+      <p><strong>Good enough:</strong> Cache lines (64 bytes), L1/L2/L3 sizes, branch prediction basics, memory latency vs throughput.</p>
+      <p><strong>Expert:</strong> Speculative execution, microarchitecture differences (Zen4, Golden Cove), instruction-level parallelism, store forwarding, false sharing, hardware prefetcher behavior.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Cache locality &amp; data layout <span class="pill pill-blue">Core systems</span></div>
+      <p>Cache misses cost 100–300 cycles. A tight inner loop that causes cache misses every iteration will be 10–30× slower than one that doesn't. This single topic explains most performance gaps between naive and expert engine code.</p>
+      <p><strong>Good enough:</strong> SoA vs AoS, avoid pointer-chasing in hot loops, know your data's size.</p>
+      <p><strong>Expert:</strong> Cache-oblivious algorithms, Morton order, hot/cold data splitting, prefetch instructions, measuring with perf / VTune.</p>
+    </div>
+  </div>
+
+  <h3>Layer 2 — Systems programming</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Data-oriented design (DOD) <span class="pill pill-blue">Core systems</span></div>
+      <p>DOD inverts OOP thinking: instead of "objects that have data," think "streams of data that are processed." ECS is DOD's most visible application in games.</p>
+      <p><strong>Good enough:</strong> Flat arrays over linked lists, separating hot data from cold, thinking in terms of transforms on arrays.</p>
+      <p><strong>Expert:</strong> Archetype ECS with chunk iteration, automatic SoA layout, query scheduling, system dependency graphs.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">SIMD (SSE / AVX / NEON) <span class="pill pill-amber">Advanced</span></div>
+      <p>The single highest-leverage optimization in a software renderer. Processing 8 pixels simultaneously with AVX2 is an 8× throughput multiplier on the rasterizer's inner loop. For a CPU-first engine, SIMD fluency is non-negotiable.</p>
+      <p><strong>Good enough:</strong> 4-float SSE operations, alignment requirements, intrinsic functions.</p>
+      <p><strong>Expert:</strong> AVX-512 gather/scatter, horizontal reductions, SIMD-friendly data structures, NEON equivalents for ARM.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Multithreading &amp; atomics <span class="pill pill-amber">Advanced</span></div>
+      <p>Modern CPUs have 8–32 cores. A single-threaded engine wastes 87–97% of available compute.</p>
+      <p><strong>Good enough:</strong> Mutex/semaphore, thread pool, basic producer-consumer queue, memory ordering (acquire/release).</p>
+      <p><strong>Expert:</strong> Lock-free queues (SPSC, MPMC), fiber-based job systems, work-stealing schedulers, hazard pointers, wait-free data structures.</p>
+      <div class="callout callout-warn" style="margin-top:10px"><p><strong>Common trap:</strong> Adding locks everywhere "to be safe." Every lock is a potential contention point. Design for lock-free where possible; synchronize at task boundaries, not inside loops.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Operating system internals <span class="pill pill-blue">Core systems</span></div>
+      <p>Platform abstraction layers require knowing what each OS actually provides: file I/O, virtual memory, threading, process model.</p>
+      <p><strong>Good enough:</strong> Virtual memory, file descriptors, POSIX basics, Windows API basics, process/thread model.</p>
+      <p><strong>Expert:</strong> mmap internals, page fault handling, OS scheduler behavior, system call overhead, huge TLB pages, memory-mapped files for asset loading.</p>
+    </div>
+  </div>
+
+  <h3>Layer 3 — Rendering &amp; math</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Math for graphics <span class="pill pill-green">Foundational</span></div>
+      <p>Vec2/3/4, Mat3/4, quaternions, euler angles, perspective/orthographic projection, view frustum, dot/cross product, barycentric coordinates, ray-triangle intersection, spatial transformations.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Implement your own <code>vec3</code>, <code>mat4</code>, and quaternion math first. Then you may use a library. You cannot optimize what you don't understand.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Software rasterization <span class="pill pill-red">Expert</span></div>
+      <p>This IS your renderer. Scanline rasterization, edge equations, barycentric interpolation, subpixel precision, fill rules, texture mapping at the CPU level.</p>
+      <p><strong>Good enough:</strong> Draw a triangle to a framebuffer, perspective-correct texture mapping, depth buffer.</p>
+      <p><strong>Expert:</strong> SIMD tile rasterizer, hierarchical z-buffer, early-out optimizations, sub-pixel accuracy, coverage masks.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">BSP trees &amp; spatial structures <span class="pill pill-amber">Advanced</span></div>
+      <p>Doom and Quake used BSP trees to solve visibility without a z-buffer. Understanding spatial partitioning (BSP, BVH, octree, kd-tree) is fundamental to both rendering and physics.</p>
+      <p><strong>Good enough:</strong> BSP concept, AABB tree, BVH construction.</p>
+      <p><strong>Expert:</strong> SAH BVH, portals + PVS, SVDAG for sparse voxels, octree streaming.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Scripting systems <span class="pill pill-amber">Advanced</span></div>
+      <p>Game logic should not require recompiling the engine. A scripting layer — embedded Lua, a custom bytecode VM, or a hot-reloaded C plugin system — separates engine from game code.</p>
+      <p><strong>Good enough:</strong> Embed Lua or a small language, expose ECS through a C API.</p>
+      <p><strong>Expert:</strong> Write your own bytecode VM, implement a simple compiler, design a reflection system that auto-generates bindings.</p>
+    </div>
+  </div>
+
+  <h3>Layer 4 — Engine systems</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">ECS (Entity Component System) <span class="pill pill-blue">Core systems</span></div>
+      <p>ECS is the dominant architecture for performance-critical game simulations. Systems iterate over contiguous component arrays, enabling SIMD and cache-friendly processing.</p>
+      <p><strong>Good enough:</strong> Sparse-set ECS (EnTT-style), basic query iteration.</p>
+      <p><strong>Expert:</strong> Archetype ECS (Unity DOTS-style), chunk-based iteration, parallel system scheduling.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Study the EnTT source code. It's the gold standard of sparse-set ECS in C++ and the codebase is genuinely educational.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Asset pipeline &amp; serialization <span class="pill pill-blue">Core systems</span></div>
+      <p>Raw assets (PNG, OBJ, WAV) are not engine assets. Your pipeline converts them at build time to memory-layout-optimal binary — directly loadable with minimal parsing.</p>
+      <p><strong>Good enough:</strong> PNG→raw RGBA, OBJ→your mesh format, WAV→raw PCM, simple custom binary format.</p>
+      <p><strong>Expert:</strong> Incremental build system, content-addressed storage, streaming/partial asset loading, hot reload of assets.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Audio system <span class="pill pill-blue">Core systems</span></div>
+      <p>Audio is a real-time system on a separate thread with strict latency requirements. Understanding the audio callback model, PCM mixing, and basic DSP is essential.</p>
+      <p><strong>Good enough:</strong> Mix 32 voices of PCM audio, basic spatial panning, volume envelope.</p>
+      <p><strong>Expert:</strong> FFT convolution reverb, HRTF spatialization, interactive music systems, custom DSP graph.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Hot reload &amp; reflection <span class="pill pill-amber">Advanced</span></div>
+      <p>Recompiling and relaunching to test a gameplay change is a development speed killer. Hot reload dramatically improves iteration. Reflection enables editors, serialization, and scripting bindings.</p>
+      <p><strong>Good enough:</strong> Hot-reload assets. Game code as a shared library, reloaded on change.</p>
+      <p><strong>Expert:</strong> Stateful hot-reload preserving entity state, code patching, compile-time reflection with code generation.</p>
+    </div>
+  </div>
+
+  <h3>Layer 5 — Cross-platform &amp; tooling</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">Build systems <span class="pill pill-blue">Core systems</span></div>
+      <p>CMake as baseline. Understand compilation units, link stages, static vs dynamic libraries. Learn to minimize rebuild time through unity builds and forward declarations.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">WebAssembly <span class="pill pill-amber">Advanced</span></div>
+      <p>Emscripten toolchain, memory model differences, JavaScript interop, canvas framebuffer access, threading with SharedArrayBuffer, audio worklet for low-latency audio.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Platform abstraction <span class="pill pill-blue">Core systems</span></div>
+      <p>Thin OS layer exposing: window creation, framebuffer blit, input events, file I/O, thread primitives, timer. Everything above this layer is platform-agnostic.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Profiling &amp; debugging <span class="pill pill-blue">Core systems</span></div>
+      <p>CPU profilers (perf, VTune, Tracy), memory profilers (Valgrind, ASan), custom in-engine overlay. You cannot optimize what you cannot measure. Build profiling in from day one.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Compiler internals <span class="pill pill-amber">Advanced</span></div>
+      <p>Understanding what the compiler does to your code — assembly output, optimization reports, PGO, LTO, sanitizers — lets you write code that compiles well and runs fast. godbolt.org is essential.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Custom allocators <span class="pill pill-blue">Core systems</span></div>
+      <p>Linear/arena, stack, pool, free-list, buddy system. Profile before choosing. An arena with a single pointer increment is fastest for per-frame temporaries. A pool is fastest for fixed-size components.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S4 ROADMAP ══════════════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 4</div>
+    <div class="sec-title">Learning Roadmap — 9 Phases</div>
+    <div class="sec-intro">A structured progression from fundamentals to expert mastery. Each phase builds on the previous. Do not skip phases.</div>
+  </div>
+
+  <div class="phase-block p0">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:#EAF3DE;color:#27500A">Phase 0</span>
+      <div>
+        <div class="phase-name">Foundations</div>
+        <div class="phase-sub">Months 1–3 · Difficulty: 4/10</div>
+      </div>
+    </div>
+    <p><strong>Goal:</strong> Become genuinely dangerous in C/C++, understand memory at a deep level, and be able to write a pixel to a screen without any library help.</p>
+    <ul>
+      <li>C pointers, structs, manual memory management</li>
+      <li>Stack vs heap, sizeof, alignment</li>
+      <li>Compilation pipeline (preprocessor → compiler → linker)</li>
+      <li>Reading disassembly (x86-64 basics)</li>
+    </ul>
+    <p><strong>Mini-projects:</strong> Write a BMP file writer (~100 lines, no libraries). Implement a dynamic array, hash map, and arena allocator from scratch.</p>
+    <ul class="resource-list" style="margin-top:10px">
+      <li><div class="res-icon"><i class="ti ti-book" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">"Computer Systems: A Programmer's Perspective" — Bryant &amp; O'Hallaron</div><div class="res-desc">Chapters 1–6 minimum. The single best book for systems understanding.</div></div></li>
+      <li><div class="res-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">Agner Fog's Optimization Manuals (free PDF)</div><div class="res-desc">Microarchitecture, Calling conventions, Optimizing C++. Read all three.</div></div></li>
+    </ul>
+    <div class="mastery"><div class="mastery-label">Sign of mastery</div><p>You can explain what the compiler generates for any simple C function, explain why a struct might have padding, and write a BMP from raw pixel data with no library help.</p></div>
+  </div>
+
+  <div class="phase-block p1">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:#E6F1FB;color:#0C447C">Phase 1</span>
+      <div>
+        <div class="phase-name">Basic engine programming</div>
+        <div class="phase-sub">Months 3–6 · Difficulty: 5/10</div>
+      </div>
+    </div>
+    <p><strong>Goal:</strong> Build a game loop, platform layer, input system, and basic 2D rendering on a software framebuffer.</p>
+    <ul>
+      <li>Platform layer: window, keyboard input, blit a pixel buffer to screen (SDL2 for blitting only)</li>
+      <li>Game loop with fixed timestep, accumulator, and interpolation</li>
+      <li>Software 2D renderer: filled rectangles, circles, lines, sprites</li>
+      <li>Simple ECS: entities, components as parallel arrays, basic query</li>
+    </ul>
+    <div class="callout callout-ok" style="margin-top:10px"><p><strong>Milestone:</strong> A complete playable Pong or Breakout — software rendered, no GPU calls, every line understood.</p></div>
+    <ul class="resource-list" style="margin-top:10px">
+      <li><div class="res-icon"><i class="ti ti-brand-youtube" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">Handmade Hero — Casey Muratori (Episodes 1–100)</div><div class="res-desc">Covers platform layer, game loop, and software rendering from absolute scratch. Required viewing.</div></div></li>
+      <li><div class="res-icon"><i class="ti ti-book" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">"Game Engine Architecture" — Jason Gregory</div><div class="res-desc">The reference text. Read alongside your implementation.</div></div></li>
+    </ul>
+    <div class="mastery"><div class="mastery-label">Sign of mastery</div><p>A real person plays your game. The code is under 2,000 lines. You understand every line of it.</p></div>
+  </div>
+
+  <div class="phase-block p2">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:#FAEEDA;color:#633806">Phase 2</span>
+      <div>
+        <div class="phase-name">Software rendering</div>
+        <div class="phase-sub">Months 6–12 · Difficulty: 7/10</div>
+      </div>
+    </div>
+    <p><strong>Goal:</strong> Build a complete 3D software renderer: triangle rasterization, texture mapping, depth buffer, basic lighting.</p>
+    <ul>
+      <li>Draw a triangle with flat shading and a depth buffer</li>
+      <li>Perspective-correct texture mapping</li>
+      <li>Load an OBJ file and render a spinning 3D model</li>
+      <li>First-person camera with view/projection matrices</li>
+      <li>BSP tree for a simple level</li>
+      <li>Doom-style raycaster (Wolfenstein 3D approach)</li>
+    </ul>
+    <div class="callout callout-ok" style="margin-top:10px"><p><strong>Milestone:</strong> Software 3D renderer — spinning textured model with a point light. 30+ FPS at 640×480 on a mid-range 2015 machine.</p></div>
+    <ul class="resource-list" style="margin-top:10px">
+      <li><div class="res-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">Fabian Giesen's blog (The ryg blog)</div><div class="res-desc">"A trip through the graphics pipeline" and "Optimizing the basic rasterizer." Essential CPU rasterization reading.</div></div></li>
+      <li><div class="res-icon"><i class="ti ti-brand-youtube" aria-hidden="true"></i></div><div class="res-body"><div class="res-title">Javidx9 / OneLoneCoder — 3D Engine from scratch series</div><div class="res-desc">Excellent step-by-step software rendering tutorials in C++.</div></div></li>
+    </ul>
+    <div class="mastery"><div class="mastery-label">Sign of mastery</div><p>You can explain perspective-correct interpolation, why subpixel precision matters, what fill rules are, and trace every pixel's color through the full pipeline.</p></div>
+  </div>
+
+  <div class="phase-block p3">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:#EEEDFE;color:#3C3489">Phase 3</span>
+      <div>
+        <div class="phase-name">Modern engine core</div>
+        <div class="phase-sub">Months 12–18 · Difficulty: 7/10</div>
+      </div>
+    </div>
+    <p><strong>Goal:</strong> Build the complete engine infrastructure: ECS, asset pipeline, audio, scripting foundation, job system.</p>
+    <ul>
+      <li>Archetype or sparse-set ECS with component iteration</li>
+      <li>Custom binary asset format + build-time converter</li>
+      <li>Audio: PCM mixing on a separate thread (miniaudio or custom)</li>
+      <li>Job system: thread pool + work-stealing queue</li>
+      <li>Lua scripting integration (or custom bytecode VM)</li>
+      <li>Hot reload: assets reload without restarting</li>
+    </ul>
+    <div class="callout callout-ok" style="margin-top:10px"><p><strong>Milestone:</strong> A simple 3D game — navigable level, collision, audio, Lua-scripted enemies. Architecturally correct even if visually modest.</p></div>
+    <div class="mastery"><div class="mastery-label">Sign of mastery</div><p>Every system is modular, performance-oriented, and understood deeply. You can explain why each design decision was made.</p></div>
+  </div>
+
+  <div class="phase-block p4">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:#FAECE7;color:#712B13">Phase 4</span>
+      <div>
+        <div class="phase-name">Performance engineering</div>
+        <div class="phase-sub">Months 18–24 · Difficulty: 8/10</div>
+      </div>
+    </div>
+    <p><strong>Goal:</strong> Profile everything. Optimize the rasterizer with SIMD. Make the ECS cache-efficient. Achieve target frame rate on the potato hardware spec.</p>
+    <ul>
+      <li>Integrate Tracy or build a custom profiler overlay</li>
+      <li>SIMD triangle rasterizer (8-wide AVX2)</li>
+      <li>SoA component layout for hot systems</li>
+      <li>Tile-based rendering for better cache behavior</li>
+      <li>Frustum culling and occlusion culling</li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:10px"><p><strong>Rule:</strong> Profile before optimizing. Every optimization decision must be supported by a measurement. Premature SIMD is worse than no SIMD — the bottleneck might be elsewhere.</p></div>
+    <div class="mastery"><div class="mastery-label">Sign of mastery</div><p>You have documented: initial bottleneck (where, why), change made, before/after performance numbers. This IS the portfolio piece.</p></div>
+  </div>
+
+  <div class="phase-block px">
+    <div class="phase-hed">
+      <span class="phase-badge" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Phases 5–8</span>
+      <div>
+        <div class="phase-name">Advanced → Expert</div>
+        <div class="phase-sub">Months 24–48+ · Difficulty: 8–10/10</div>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Phase 5 (Advanced systems):</strong> Fiber-based job scheduler, custom bytecode VM, physics (rigid body + AABB collision), reflection system, save/load with versioning.</li>
+      <li><strong>Phase 6 (Tooling / editor):</strong> Minimal Godot-inspired editor — scene hierarchy, property inspector, asset browser, in-game console, visual profiler.</li>
+      <li><strong>Phase 7 (Cross-platform + Web):</strong> Emscripten WASM port, macOS Metal blit layer, Linux X11/Wayland. Android/iOS as stretch goals.</li>
+      <li><strong>Phase 8 (Expert optimization):</strong> PGO, LTO, tiny executable (sub-500KB), WASM streaming compile, custom compression, demoscene-style tricks.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S5 ARCHITECTURE ══════════════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 5</div>
+    <div class="sec-title">Engine Architecture</div>
+    <div class="sec-intro">Module design, runtime structure, and every major system — with tradeoffs explained.</div>
+  </div>
+
+  <h3>Module dependency layers</h3>
+  <div class="arch-layer">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:5px">Foundation (no dependencies)</div>
+    <div class="arch-row">
+      <div class="arch-node hi">Platform layer</div>
+      <div class="arch-node hi">Core memory</div>
+      <div class="arch-node hi">Math library</div>
+    </div>
+  </div>
+  <div class="arch-layer">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:5px">Runtime systems (depend on foundation)</div>
+    <div class="arch-row">
+      <div class="arch-node">Job system</div>
+      <div class="arch-node">Asset system</div>
+      <div class="arch-node">ECS</div>
+      <div class="arch-node">Renderer</div>
+      <div class="arch-node">Audio</div>
+      <div class="arch-node">Input</div>
+      <div class="arch-node">Physics</div>
+    </div>
+  </div>
+  <div class="arch-layer">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:5px">Game layer (depends on runtime)</div>
+    <div class="arch-row">
+      <div class="arch-node">Scripting (Lua)</div>
+      <div class="arch-node">Scene system</div>
+      <div class="arch-node">Hot reload</div>
+      <div class="arch-node hi">Game loop</div>
+    </div>
+  </div>
+  <div class="arch-layer">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:5px">Dev-only (stripped from shipping builds)</div>
+    <div class="arch-row">
+      <div class="arch-node">Editor UI</div>
+      <div class="arch-node">Profiler overlay</div>
+      <div class="arch-node">Debug allocator</div>
+      <div class="arch-node">Asset importer</div>
+    </div>
+  </div>
+
+  <h3>Platform layer</h3>
+  <div class="card">
+    <div class="card-title">Design: thin OS wrapper, never leaked upward</div>
+    <p>The platform layer is the only code that differs per-platform. It exposes exactly this interface — and nothing more:</p>
+    <ul style="margin-top:8px">
+      <li><code>platform_create_window(w, h, title)</code></li>
+      <li><code>platform_blit_framebuffer(fb)</code></li>
+      <li><code>platform_get_input_events()</code></li>
+      <li><code>platform_get_time_ns()</code></li>
+      <li><code>platform_file_read(path, dest_arena)</code></li>
+      <li><code>platform_thread_create / mutex / semaphore / atomic</code></li>
+    </ul>
+    <p style="margin-top:10px">Everything above the platform layer is testable without a running OS. The platform layer is the seam for WASM, macOS, Linux, and Windows implementations. If it requires understanding the game, it's not platform code.</p>
+  </div>
+
+  <h3>Memory architecture</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Permanent arena</div>
+      <p>Allocated at startup, never freed during runtime. Contains: entity component storage, loaded asset data, ECS archetype buffers. Single large OS allocation upfront (e.g. 512 MB). Bump pointer only moves forward.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Frame scratch</div>
+      <p>Reset every frame. Used for: render command lists, temporary sort buffers, string building, any per-frame allocation. Zero-cost "free" — just reset the pointer. 64 MB is generous. Never use for anything surviving a frame boundary.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Asset pool</div>
+      <p>Fixed-size slots for assets (textures, meshes, sounds). Pool allocator: O(1) alloc/free, zero fragmentation. Max N of each type defined at startup based on the game's asset count. No dynamic resizing at runtime.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Debug/editor heap</div>
+      <p>Non-shipping builds only. Uses system malloc for developer tooling. Never called from the game loop hot path. If you see a malloc in a profiler trace, something is architecturally wrong.</p>
+    </div>
+  </div>
+
+  <h3>Renderer architecture</h3>
+  <div class="card">
+    <div class="card-title">CPU software renderer — design principles</div>
+    <p><strong>Framebuffer ownership:</strong> The renderer owns two framebuffers (double-buffered). Game writes to back buffer; platform layer blits front buffer to screen. Swap at vsync or at fixed intervals.</p>
+    <p><strong>Tile-based rendering:</strong> Divide the screen into 64×64 or 32×32 tiles. Assign tiles to worker threads. Each tile is independent — no inter-tile communication in the rasterizer hot path. Near-linear scaling with core count.</p>
+    <p><strong>Render command list:</strong> The game produces a list of draw commands (draw_mesh, draw_sprite, draw_text) into frame scratch memory. The renderer sorts and executes this list. Decouples game simulation from rendering, allows culling before rasterizing, and enables draw order optimization.</p>
+    <p><strong>Texture cache strategy:</strong> Sequential screen pixels jump across texture memory in standard row-major layout. Morton-order (Z-order curve) texture storage significantly improves locality. Pre-generate mipmaps in your asset pipeline.</p>
+  </div>
+
+  <h3>ECS design</h3>
+  <div class="card">
+    <div class="card-title">Recommendation: sparse-set ECS to start, archetype ECS later</div>
+    <p><strong>Sparse-set ECS (EnTT-style):</strong> Entities are integer IDs. Each component type has a sparse array (ID → component index) and a dense array of components. Iteration over a component type is always linear. Insertion and removal are O(1). Simpler to implement.</p>
+    <p><strong>Archetype ECS (Unity DOTS-style):</strong> Entities with identical component sets are grouped into archetypes. Components stored in SoA chunks. Much better cache behavior for multi-component queries. More complex — add in Phase 4.</p>
+    <div class="callout callout-warn" style="margin-top:10px"><p><strong>What not to do:</strong> Virtual dispatch in component update loops. A vtable call per entity kills cache line coherency and branch prediction. Systems iterate over arrays, not objects.</p></div>
+  </div>
+
+  <h3>What to intentionally NOT overengineer</h3>
+  <div class="callout callout-warn">
+    <p><strong>Scene graph:</strong> A flat entity array with parent/child IDs and a simple sorted transform propagation loop is sufficient for 95% of games. Complex scene graphs with deep inheritance are a Unity-era mistake that costs performance and comprehension.</p>
+  </div>
+  <ul>
+    <li><strong>Plugin system:</strong> Don't build one until you have 3 real use cases. Interfaces designed in advance are wrong interfaces.</li>
+    <li><strong>Networking:</strong> Explicitly out of scope. Do not add it.</li>
+    <li><strong>Physics engine:</strong> Start with AABB collision. Full rigid body only if a game requires it.</li>
+    <li><strong>Shader system:</strong> You don't have shaders. CPU rendering means "shading" is C functions. Don't add a shader abstraction layer.</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════ S6 RENDERING ══════════════════════════════════════ -->
+<div class="sec" id="s5">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 6</div>
+    <div class="sec-title">Software Rendering Masterpath</div>
+    <div class="sec-intro">The deep dive into CPU rendering — what's still relevant, what changed, and how to build an excellent software renderer.</div>
+  </div>
+
+  <h3>The rendering pipeline — CPU edition</h3>
+  <div class="card">
+    <ol>
+      <li><strong>Frustum culling:</strong> Reject objects entirely outside the view frustum. AABB vs plane tests. Trivially parallelizable and eliminates most scene geometry before rasterization.</li>
+      <li><strong>Occlusion culling:</strong> Reject objects hidden behind others. Software HiZ buffer approach: use the previous frame's depth buffer (downsampled) to test object AABB depth. If the object's nearest depth is behind the HiZ value, skip it.</li>
+      <li><strong>Vertex transform:</strong> Model → World → View → Clip space for each vertex. SIMD-accelerate 4 vertices at a time with AVX.</li>
+      <li><strong>Clipping:</strong> Clip triangles against the near plane. Sutherland-Hodgman algorithm generates new vertices at clip boundaries.</li>
+      <li><strong>Rasterization:</strong> Determine which pixels each triangle covers. Compute barycentric coordinates. Interpolate attributes (UV, normal, color). Run the fragment function (texture lookup + lighting). Write color + depth.</li>
+      <li><strong>Post-processing:</strong> Optional fullscreen passes: dithering, color grading, scanline overlay, CRT simulation — all cheap on CPU at low resolutions.</li>
+    </ol>
+  </div>
+
+  <h3>Triangle rasterization — the right algorithm</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Scanline rasterizer (old approach)</div>
+      <p>For each row between triangle top and bottom, compute left and right x bounds and fill the span. Simple to implement. Hard to SIMD-accelerate efficiently, poor cache behavior on wide triangles.</p>
+      <span class="pill pill-amber">Doom/old style</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Edge equation rasterizer (preferred)</div>
+      <p>Three edge functions define the triangle interior. For each pixel in the bounding box, evaluate all three simultaneously. Embarrassingly parallel — evaluate a block of 8×8 pixels with SIMD. This is what modern GPU rasterizers do.</p>
+      <span class="pill pill-green">Recommended for SIMD</span>
+    </div>
+  </div>
+  <div class="callout callout-info">
+    <p><strong>Tile-based approach:</strong> Divide screen into 64×64 tiles. Bin each triangle into overlapping tiles (prepass). Dispatch tiles to worker threads. Each thread rasterizes its tile's triangles independently — no locking, linear cache access. This is how console GPU rasterizers work and maps perfectly to your job system.</p>
+  </div>
+
+  <h3>Texture mapping</h3>
+  <div class="card">
+    <div class="card-title">Perspective-correct texture mapping — why it matters</div>
+    <p>Linear interpolation of UV coordinates in screen space is mathematically wrong — it produces the classic "swimming texture" artifact from early 3D games. Perspective-correct interpolation requires dividing UV by W at each vertex, interpolating the divided values, then multiplying back by interpolated 1/W per pixel. ~2 extra operations per pixel — worth it.</p>
+    <p style="margin-top:10px"><strong>Texture cache optimization:</strong></p>
+    <ul>
+      <li><strong>Morton-order (Z-curve) textures:</strong> Nearby screen pixels map to nearby texture memory. 2–4× speedup on large textured polygons.</li>
+      <li><strong>Mipmaps:</strong> Pre-computed lower-resolution versions. Select mip level based on screen-space derivatives. Prevents aliasing and reduces bandwidth at distance. Generate in the asset pipeline.</li>
+    </ul>
+  </div>
+
+  <h3>Doom-style renderer — what's still relevant</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">BSP tree + sector/portal system</div>
+      <p>Doom split the level into convex sectors using a BSP tree. Rendering traversed front-to-back from the camera, drawing each sector's walls once with no overdraw. For levels with many rooms and corridors, this is still extremely efficient. PVS (Potentially Visible Set) — precomputed visibility between sectors — extends this further.</p>
+      <span class="pill pill-green">Still highly relevant</span><span class="pill pill-gray">Interior environments</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Column-based rendering</div>
+      <p>Wolfenstein 3D rendered the world as columns of pixels — each vertical strip corresponds to a ray cast into the scene. Each column is independent and trivially parallelizable. Works only for flat-floor, vertical-wall worlds but is extremely fast. PICO-8 raycasters use this approach.</p>
+      <span class="pill pill-green">Still relevant</span><span class="pill pill-gray">Pseudo-3D games</span>
+    </div>
+  </div>
+
+  <h3>Lighting on CPU</h3>
+  <ul>
+    <li><strong>Lightmaps (precomputed):</strong> Bake lighting offline into a texture. Runtime cost: a single texture sample per pixel. This is how Quake lit levels — beautiful results, zero runtime cost. Your asset pipeline bakes lightmaps using a path tracer.</li>
+    <li><strong>Vertex lighting:</strong> Compute lighting per-vertex, interpolate across triangle. Very fast, low fidelity, works well for low-poly art styles.</li>
+    <li><strong>Flat + dynamic lights:</strong> Flat-shaded geometry with 4–8 dynamic point lights. Precompute which triangles each light affects. At runtime, only update affected triangles.</li>
+    <li><strong>Palette tricks:</strong> Doom used a single "colormap" — a 256-color lookup table mapping palette indices to darker ones as distance increased. No math — just a table lookup. Extremely fast, iconic aesthetic.</li>
+  </ul>
+
+  <h3>SIMD acceleration of the rasterizer</h3>
+  <div class="card">
+    <div class="card-title">AVX2 8-wide triangle rasterizer — the core optimization</div>
+    <p>The edge equation test for 8 pixels in a tile simultaneously:</p>
+    <ul>
+      <li>Load 8 pixel x-coordinates into a <code>__m256i</code> register</li>
+      <li>Evaluate all three edge functions for all 8 pixels simultaneously</li>
+      <li>Create a coverage mask with SIMD comparison</li>
+      <li>For covered pixels: interpolate UVs, fetch texels, compute lighting</li>
+      <li>Write 8 pixels to the framebuffer with a masked store</li>
+    </ul>
+    <div class="callout callout-info" style="margin-top:12px"><p>A 1-wide scalar rasterizer might rasterize 30–50M pixels/second. An 8-wide AVX2 rasterizer can reach 200–400M pixels/second on the same hardware. For a 640×480 framebuffer at 60 fps, you need 18.4M pixel writes/second — SIMD headroom lets you do far more work per pixel.</p></div>
+  </div>
+
+  <h3>What became obsolete</h3>
+  <ul>
+    <li><strong>Sorting-based BSP rendering (no depth buffer):</strong> Only necessary when depth buffer memory was expensive. Today, 4 MB of depth buffer is trivial.</li>
+    <li><strong>Palette-based color (8-bit indexed):</strong> Obsolete for compatibility, but still aesthetically valid and actually faster than 32-bit for fill operations.</li>
+    <li><strong>Fixed-point math:</strong> Necessary on CPUs without FPUs. Modern CPUs have fast floating-point units. Use floats — unless targeting actual embedded hardware without an FPU.</li>
+  </ul>
+
+  <h3>Hybrid CPU/GPU rendering</h3>
+  <div class="callout callout-info">
+    <p><strong>Optional acceleration path:</strong> On machines with integrated graphics, use the GPU to blit the framebuffer with GPU-accelerated upscaling (e.g. from 640×360 to 1920×1080). Zero rendering logic on GPU — just a texture upload and a fullscreen quad draw. The CPU does all rendering; the GPU handles final display scaling. ~50 lines of code using SDL2's texture API.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S7 PERFORMANCE ══════════════════════════════════════ -->
+<div class="sec" id="s6">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 7</div>
+    <div class="sec-title">Performance Engineering</div>
+    <div class="sec-intro">The deep principles of making code fast — not through tricks, but through understanding what the hardware actually does.</div>
+  </div>
+
+  <h3>The performance hierarchy</h3>
+  <div class="card">
+    <p>In order of impact, highest to lowest:</p>
+    <ol>
+      <li><strong>Do less work</strong> — Culling before rasterizing is 100× better than a faster rasterizer. Precomputing offline is infinitely better than computing at runtime. Algorithm choice beats micro-optimization every time.</li>
+      <li><strong>Data layout</strong> — Cache-friendly data structures (SoA, flat arrays) beat smart algorithms on cache-unfriendly data. A linear scan of an array beats a binary search in a linked list for small N.</li>
+      <li><strong>Parallelism</strong> — Using 8 cores instead of 1 is an 8× multiplier. Job systems, tile rendering, and parallel asset loading all belong here.</li>
+      <li><strong>SIMD</strong> — Processing 8 values simultaneously is an 8× multiplier on the specific operation. Apply where data parallelism exists and the operation is already a confirmed bottleneck.</li>
+      <li><strong>Micro-optimization</strong> — Branch prediction, instruction scheduling, instruction fusion. Meaningful only after everything above is done.</li>
+    </ol>
+  </div>
+
+  <h3>Cache locality — the most important concept</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Memory latency reality</div>
+      <p>L1 cache hit: ~4 cycles. L2 hit: ~12 cycles. L3 hit: ~40 cycles. RAM miss: ~200 cycles. One cache miss to RAM costs as much as 50 L1 hits. An inner loop that misses cache every iteration is 50× slower than it needs to be.</p>
+      <p>A cache line is 64 bytes. When you access any byte, 64 bytes load. If your struct is larger than 64 bytes but you only use 8 bytes, you're wasting 87% of cache bandwidth.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Hot/cold data splitting</div>
+      <p>If an entity has Position (12 B), Velocity (12 B), Health (4 B), AI State (200 B) — and your movement system only touches Position + Velocity — don't store them together. With mixed layout: 0.5 entities per cache line. With split layout: 5 entities per cache line. 10× cache efficiency from one struct split.</p>
+    </div>
+  </div>
+
+  <h3>SoA vs AoS</h3>
+  <div class="card">
+    <p><strong>AoS (Array of Structures) — typical OOP layout:</strong></p>
+    <p><code>struct Entity { float x, y, z; float vx, vy, vz; int health; }; Entity entities[N];</code></p>
+    <p>Sequential entities are adjacent. Good if you always process all fields of one entity before moving to the next. Bad for SIMD (x values of different entities are 32 bytes apart).</p>
+    <p style="margin-top:10px"><strong>SoA (Structure of Arrays) — DOD layout:</strong></p>
+    <p><code>float positions_x[N], positions_y[N], positions_z[N];</code></p>
+    <p>All x positions are adjacent. SIMD loads 8 x-values in one AVX register. A position-only system has perfect cache behavior. Bad if you always need all fields of one entity.</p>
+    <div class="callout callout-key" style="margin-top:12px"><p><strong>Rule:</strong> Default to AoS. Switch to SoA only when a system touches a subset of fields for many entities AND profiling confirms cache misses are the bottleneck.</p></div>
+  </div>
+
+  <h3>Branch prediction</h3>
+  <p>Modern CPUs predict branch outcomes and speculatively execute the predicted path. A correctly predicted branch costs 0 cycles. A mispredicted branch costs ~15 cycles (pipeline flush).</p>
+  <ul>
+    <li>Sort data before processing to make branches predictable (all alive entities first, then dead).</li>
+    <li>Replace unpredictable branches with branchless computation where possible (conditional moves).</li>
+    <li>For SIMD, use masks instead of branches — compute both paths, blend results with a mask.</li>
+    <li>Don't add <code>[[likely]]</code> / <code>[[unlikely]]</code> hints without profile data to justify them.</li>
+  </ul>
+
+  <h3>False sharing</h3>
+  <div class="callout callout-warn">
+    <p><strong>The silent multithreading killer:</strong> If two threads write to different variables that share a cache line, the CPU must coordinate cache ownership between cores — even though they're writing to different addresses. This can cause 10–50× slowdowns on code that looks correctly parallel. Fix: pad shared data structures to cache line boundaries. <code>alignas(64) struct WorkerState { ... };</code></p>
+  </div>
+
+  <h3>Custom allocators — the actual performance numbers</h3>
+  <div class="card">
+    <p><strong>malloc:</strong> ~50–200 cycles per allocation (fragmentation, lock contention, bookkeeping). At 10,000 allocations per frame at 60 fps: 30–120M cycles/sec spent just in the allocator. On a 4 GHz CPU, that's 7–30ms per second — meaningful overhead.</p>
+    <p><strong>Arena allocator:</strong> 1–3 cycles per allocation (single pointer add + bounds check). 0 cycles to free (pointer reset at end of frame). The difference is real and measurable.</p>
+    <ul style="margin-top:8px">
+      <li>Per-frame temporaries → Frame arena (reset each frame)</li>
+      <li>Fixed-lifetime assets → Pool allocator</li>
+      <li>Long-lived game state → Permanent arena</li>
+      <li>Miscellaneous/unpredictable → Never in the hot path. If you need malloc in a hot loop, you have an architectural problem.</li>
+    </ul>
+  </div>
+
+  <h3>What indie engines usually get wrong</h3>
+  <div class="callout callout-warn">
+    <p><strong>Premature abstraction:</strong> Adding an "event system" or "message bus" before understanding access patterns. Indirection + allocation per event destroys cache performance. For high-frequency events (per-entity per-frame), use direct function calls or flags in component arrays. For low-frequency events (button click, scene load), a simple callback list is fine.</p>
+  </div>
+  <ul>
+    <li><strong>Using <code>std::vector</code> of pointers:</strong> All your data is scattered in memory. Allocate into contiguous arrays and use indices.</li>
+    <li><strong>Profiling only frame time:</strong> Frame time tells you something is slow, not where. Use a sampling profiler that shows the call graph and cache miss rates.</li>
+    <li><strong>Optimizing the wrong thing:</strong> A week optimizing a 0.5ms system when your bottleneck is a 10ms texture load. Measure first, always.</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════ S8 TECH STACK ══════════════════════════════════════ -->
+<div class="sec" id="s7">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 8</div>
+    <div class="sec-title">Recommended Technology Stack</div>
+    <div class="sec-intro">What to use, what to replace later, and precisely why each recommendation exists.</div>
+  </div>
+
+  <h3>Language</h3>
+  <div class="card">
+    <div class="card-title">C++ (C-style subset) — primary language</div>
+    <p><strong>Why C++:</strong> SIMD intrinsics, manual memory control, zero-overhead abstractions, compile-time computation, direct OS API access, no GC pauses, massive tooling ecosystem. The performance control needed for CPU-first rendering requires C or C++.</p>
+    <p><strong>Which features to use:</strong> structs/classes (no virtual), templates (sparingly), references, <code>constexpr</code>, <code>[[nodiscard]]</code>, designated initializers (C++20). Avoid: exceptions, RTTI, complex inheritance, <code>std::shared_ptr</code>, heavy STL in hot paths.</p>
+    <p><strong>Scripting: LuaJIT preferred.</strong> LuaJIT's performance is exceptional. Lua's C embedding API is well-documented and minimal. Alternative: custom bytecode VM after Phase 4.</p>
+  </div>
+
+  <h3>Build system</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">CMake — start here</div>
+      <span class="pill pill-green">Phases 0–3</span>
+      <p style="margin-top:8px">Industry standard, cross-platform, supported by every IDE and CI system. Use modern CMake (target_* style), avoid legacy global flags. Add <code>compile_commands.json</code> generation for clangd IDE support.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Custom build script — later</div>
+      <span class="pill pill-amber">Phase 5+</span>
+      <p style="margin-top:8px">A single-file build script in Python or C achieves faster incremental builds by understanding your specific source tree. For this engine's scope, well-structured CMake is sufficient indefinitely.</p>
+    </div>
+  </div>
+
+  <h3>Libraries — start with, then replace</h3>
+  <div style="overflow-x:auto;margin-bottom:16px">
+  <table class="data-table">
+    <thead><tr><th>Library</th><th>Purpose</th><th>Replace with</th><th>When</th></tr></thead>
+    <tbody>
+      <tr><td>SDL2 / SDL3</td><td>Window, framebuffer blit, input, audio init</td><td>Custom platform layer per-OS</td><td>Phase 7</td></tr>
+      <tr><td>miniaudio</td><td>Audio device + callback</td><td>Custom per-platform audio (WASAPI, CoreAudio, ALSA)</td><td>Phase 5 if needed</td></tr>
+      <tr><td>stb_image</td><td>PNG/JPG loading in asset pipeline</td><td>Never at runtime — pipeline tool only</td><td>Never</td></tr>
+      <tr><td>LuaJIT</td><td>Scripting</td><td>Custom bytecode VM</td><td>Phase 8 / specialization</td></tr>
+      <tr><td>EnTT</td><td>ECS reference / study</td><td>Your own ECS</td><td>Phase 3 (after studying it)</td></tr>
+      <tr><td>cgltf / tinyobj</td><td>Mesh loading in asset pipeline</td><td>Never at runtime — pipeline tool only</td><td>Never</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Compilers</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">Clang <span class="pill pill-green">Primary</span></div>
+      <p>Best diagnostics, best sanitizers (ASan, UBSan, TSan), best compile times for large codebases, LLVM backend for WASM. Use for development.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">GCC <span class="pill pill-blue">Linux</span></div>
+      <p>Often generates better AVX code than Clang for tight loops. Profile both and pick the winner per platform. Required for Linux distribution.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">MSVC <span class="pill pill-gray">Windows</span></div>
+      <p>Required for Windows compatibility testing. Consider ClangCL (Clang targeting MSVC ABI) as a middle ground with better diagnostics.</p>
+    </div>
+  </div>
+
+  <h3>Profilers</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Tracy Profiler <span class="pill pill-green">Highly recommended</span></div>
+      <p>Open-source, low-overhead, real-time frame profiler. Instrumentate code with simple macros. Connects over network to a separate profiler UI. Shows frame timing, zone timings, memory allocations. The best free profiler available.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Platform profilers</div>
+      <p><strong>Linux:</strong> perf + hotspot UI, VTune (Intel, free for open source). <strong>Windows:</strong> Windows Performance Analyzer, Superluminal. <strong>Mac:</strong> Instruments (Xcode). Use these to find cache miss patterns Tracy doesn't show.</p>
+    </div>
+  </div>
+
+  <h3>Debuggers</h3>
+  <ul>
+    <li><strong>GDB / LLDB:</strong> Command-line debuggers. Learn them well — you'll use them constantly. TUI mode makes GDB bearable.</li>
+    <li><strong>RemedyBG (Windows):</strong> Excellent native debugger, much faster than Visual Studio's for large codebases.</li>
+    <li><strong>rr (Linux):</strong> Record-and-replay debugger. Record a crash, replay it deterministically, step backward. Invaluable for heisenbugs.</li>
+    <li><strong>AddressSanitizer / UBSanitizer:</strong> Compile with <code>-fsanitize=address,undefined</code>. Catch memory errors and undefined behavior before they become mysterious crashes.</li>
+  </ul>
+
+  <h3>Cross-platform &amp; CI</h3>
+  <ul>
+    <li><strong>Emscripten:</strong> LLVM-based C++ → WASM compiler. The only viable path for browser deployment. SDL2 has an Emscripten backend; most system calls are emulated.</li>
+    <li><strong>GitHub Actions:</strong> Free CI for open-source. Build matrix: Windows / Linux / macOS + Clang / GCC / MSVC. WASM build in CI catches portability regressions early.</li>
+    <li><strong>Zig as a cross-compilation toolchain:</strong> <code>zig cc</code> wraps Clang with a complete hermetic toolchain. Build a Linux ARM binary from Windows. Surprisingly practical.</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════ S9 BUILD ORDER ══════════════════════════════════════ -->
+<div class="sec" id="s8">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 9</div>
+    <div class="sec-title">Practical Build Order</div>
+    <div class="sec-intro">The exact sequence to build the engine — with milestones, traps, and scope limits at each stage.</div>
+  </div>
+
+  <ul class="step-list">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="card-title">First executable — hello framebuffer</div>
+        <p>Open a window using SDL2. Fill a pixel buffer with a color. Blit it to the window. Measure frame time. Exit cleanly.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> A colored window at stable 60 fps. You understand the game loop, fixed timestep, and platform blit.</p></div>
+        <div class="callout callout-warn" style="margin-top:4px"><p><strong>Scope limit:</strong> No input, no renderer. Just the loop and the blit. Complexity enters one system at a time.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="card-title">First renderer — 2D software drawing</div>
+        <p>Draw filled rectangles, circles, and lines to the framebuffer. Load a PNG with stb_image, draw it as a sprite. Add a z-layer concept. Add alpha blending.</p>
+        <div class="callout callout-warn" style="margin-top:6px"><p><strong>Common trap:</strong> Over-abstracting the renderer interface before you know what the renderer needs. Write concrete functions first: <code>draw_rect()</code>, <code>draw_sprite()</code>. Abstract later when patterns emerge.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="card-title">First game — Pong or Breakout</div>
+        <p>Complete playable game: input handling, game state machine, collision, scoring, win/lose condition. Everything in C, software renderer only.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> A real person plays and understands the game. Code is under 2,000 lines.</p></div>
+        <div class="callout callout-key" style="margin-top:4px"><p><strong>Refactor signal:</strong> If adding a feature requires changing 5+ files, your architecture has too much coupling. Flatten it.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="card-title">First 3D renderer — spinning textured cube</div>
+        <p>Implement a 3D perspective camera, vertex transform pipeline, triangle rasterizer with depth buffer, perspective-correct texture mapping.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> A textured cube rotating smoothly. No z-fighting. 30+ FPS at 640×480 on a 2015-era machine.</p></div>
+        <div class="callout callout-warn" style="margin-top:4px"><p><strong>Common trap:</strong> Debugging with complex scenes. Start with one triangle, then one quad, then the cube. Add complexity incrementally.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="card-title">First ECS — entities with components</div>
+        <p>Implement a sparse-set ECS. Create entities, attach components (Transform, Velocity, Sprite), iterate in systems. Re-implement your Pong on the ECS.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Identical gameplay, cleaner architecture, measurably faster iteration over entities.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="card-title">First asset system — binary asset format</div>
+        <p>Write an offline asset converter: PNG→.tex (raw RGBA binary), OBJ→.mesh (packed vertex binary). Runtime loads binary directly with minimal parsing.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Asset load time drops 5–20× vs parsing raw PNG/OBJ at runtime. Load time measured and documented.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="card-title">First Doom-style level — raycasting or BSP</div>
+        <p>Build a level format (2D grid or BSP map). Implement raycasting (Wolfenstein-style) or BSP traversal (Doom-style). Walk through the level with a first-person camera. Texture-mapped walls, floor, ceiling.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> You can walk through a level that feels like Wolfenstein 3D or Doom. Stable frame rate at target resolution.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <div class="card-title">First audio — PCM mixing</div>
+        <p>Integrate miniaudio. Implement a mixer: N simultaneous mono/stereo sounds at configurable volume and pitch. Simple volume falloff with distance.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Sound effects and music play correctly with no crackling. Correct looping. Latency &lt;50ms.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">9</div>
+      <div class="step-body">
+        <div class="card-title">First optimization pass — profiler-guided</div>
+        <p>Integrate Tracy. Profile a full game session. Identify the top 3 bottlenecks. Optimize each with concrete changes (SoA layout, culling, SIMD pilot). Measure improvement.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Documented: initial bottleneck (where, why), change made, before/after numbers. This documentation IS the portfolio piece.</p></div>
+        <div class="callout callout-key" style="margin-top:4px"><p><strong>Refactor vs continue:</strong> Refactor when a design actively prevents the next milestone. Continue when the design is "not ideal but works." Refactoring for aesthetics costs weeks. Refactoring to unblock capability is essential.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">10</div>
+      <div class="step-body">
+        <div class="card-title">First scripting layer — Lua game logic</div>
+        <p>Embed LuaJIT. Expose entity creation, component access, input, and audio through the Lua C API. Rewrite enemy AI and game rules in Lua. Hot-reload scripts while game runs.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Changing enemy behavior requires editing a .lua file and saving. Game updates within 1 second without restart.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">11</div>
+      <div class="step-body">
+        <div class="card-title">First editor — minimal tooling</div>
+        <p>Simple in-engine overlay: entity list, component inspector, asset browser, console. Level editor: place entities, configure properties, save/load level.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> You can design a level without touching code. A hypothetical non-programmer could place and configure entities.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">12</div>
+      <div class="step-body">
+        <div class="card-title">First cross-platform port — WASM</div>
+        <p>Compile to WebAssembly with Emscripten. Game runs in a browser at target frame rate. Share a URL, game loads in &lt;5 seconds.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> Anyone with a browser can play your game without installing anything. Your most powerful distribution story.</p></div>
+      </div>
+    </li>
+    <li>
+      <div class="step-num">13</div>
+      <div class="step-body">
+        <div class="card-title">First game demo — complete experience</div>
+        <p>3–5 minute playable demo. Defined start and end. Working audio. Polished enough to show publicly. Submitted to itch.io and shown in a portfolio.</p>
+        <div class="callout callout-ok" style="margin-top:6px"><p><strong>Success:</strong> External players complete the demo without guidance. Frame rate stable on a 2015-era machine. Executable under 10 MB.</p></div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════ S10 SPECIALIZATIONS ══════════════════════════════════════ -->
+<div class="sec" id="s9">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 10</div>
+    <div class="sec-title">Long-Term Specialization Paths</div>
+    <div class="sec-intro">After the core engine is complete, where can you take it? Each path is a multi-month deep dive.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Retro FPS engine</div>
+      <span class="pill pill-blue">6–12 months</span>
+      <p style="margin-top:8px">Push the Doom-style renderer to its limits. Implement Quake-style BSP with PVS. Add decals, dynamic lights, particle effects. Build a level editor in the spirit of TrenchBroom. This path leads to a publishable "game creation kit" for boomer shooter games — a real market on itch.io and Steam.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Deterministic simulation engine</div>
+      <span class="pill pill-blue">6–12 months</span>
+      <p style="margin-top:8px">Replace floating-point math with fixed-point. Implement a deterministic physics engine. Design a lockstep replay system — record all inputs, replay them, get bit-identical output. Enables complete game replays from inputs only, deterministic multiplayer, debugging tools that can replay any bug. Highly valued for RTS, fighting game, and simulation genres.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Tiny executable engine</div>
+      <span class="pill pill-amber">3–6 months</span>
+      <p style="margin-top:8px">LTO + strip + upx compression + custom startup code. 4KB intros, 64KB demos, 256KB games. Learn: custom PE/ELF headers, syscall-based platform layer without CRT, Crinkler/kkrunchy compressors, procedural audio, procedural graphics. Portfolio showpiece of extreme technical skill.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">CPU raytracer / path tracer</div>
+      <span class="pill pill-red">12+ months</span>
+      <p style="margin-top:8px">Replace the rasterizer with a path tracer for offline rendering — cinematic screenshots, asset pipeline previews, or a "cinematic mode." Start with Peter Shirley's "Ray Tracing in One Weekend." Then: SIMD BVH traversal, wavefront path tracing, importance sampling, ReSTIR. A career specialization unto itself.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Custom scripting language + compiler</div>
+      <span class="pill pill-red">12–24 months</span>
+      <p style="margin-top:8px">Design and implement your own scripting language. Lexer → parser → AST → bytecode compiler → VM interpreter. Requires formal language theory, compiler design (Crafting Interpreters is the best resource), and bytecode VM design. A typed Lua with structs and optional GC is achievable in 12 months. The deepest technical rabbit hole on this list.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">ECS research &amp; archetype engine</div>
+      <span class="pill pill-amber">6–9 months</span>
+      <p style="margin-top:8px">Deep dive into ECS architecture research. Implement archetype ECS from scratch. Study Flecs source code. Design a system query language. Implement parallel system scheduling with dependency graphs. Compare archetype vs sparse-set performance across real workloads. Write a technical blog post series. This is publishable research-quality work.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Embedded / low-power game systems</div>
+      <span class="pill pill-amber">6–12 months</span>
+      <p style="margin-top:8px">Port the engine to ARM microcontrollers (Raspberry Pi Pico, STM32 with display) or Raspberry Pi. Handle: no FPU (fixed point), no OS (bare metal), tight RAM (256KB–2MB), slow display I/O (SPI bus to TFT screen). The ultimate constraint-driven design — every byte matters, every cycle counts.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Demoscene optimization</div>
+      <span class="pill pill-red">Ongoing</span>
+      <p style="margin-top:8px">Study and participate in demoscene competitions. Categories: 4KB intro, 64KB intro, 256KB demo. Techniques: procedural generation, timeline editors, executable compression, procedural audio. The demoscene is the world's most extreme applied computer science community — the people who truly push hardware to its limits.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S11 REALITY CHECK ══════════════════════════════════════ -->
+<div class="sec" id="s10">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 11</div>
+    <div class="sec-title">Reality Check</div>
+    <div class="sec-intro">Brutally honest assessment of what this project actually requires — and what will kill it.</div>
+  </div>
+
+  <h3>Time investment — honest estimates</h3>
+  <div class="card">
+    <p>Building a complete, polished, cross-platform engine takes 3–7 years of serious part-time work (10–20 hours/week). This is not pessimism — it's the honest history of every solo engine project that succeeded.</p>
+    <ul style="margin-top:8px">
+      <li><strong>Phase 0–1 (Foundations):</strong> 200–400 hours to genuinely understand, not just complete.</li>
+      <li><strong>Phase 2 (Software rendering):</strong> 300–500 hours for a real 3D renderer.</li>
+      <li><strong>Phase 3–4 (Engine core + optimization):</strong> 400–800 hours.</li>
+      <li><strong>Phase 5–8 (Advanced through expert):</strong> 800–2,000+ hours.</li>
+    </ul>
+    <div class="callout callout-key" style="margin-top:12px"><p><strong>Total: 1,700–3,700 hours</strong> to a genuinely expert-level, complete engine. At 15 hours/week, that's 2.2–4.8 years. This is a lifestyle project, not a semester project.</p></div>
+  </div>
+
+  <h3>What kills solo engine projects</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">The feature spiral</div>
+      <p>You add scripting before the renderer is stable. The scripting system exposes renderer bugs. You fix the renderer, which breaks the scripting API. You redesign the scripting API. Progress stalls and frustration mounts.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Fix: finish phases completely before starting the next.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Premature perfection</div>
+      <p>Spending 3 months designing the "perfect" ECS architecture before implementing anything. The architecture will be wrong. You only learn what you need from building.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Fix: build the worst version that works, then replace it with something better informed by reality.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Scope creep</div>
+      <p>Adding online multiplayer "because it would be cool." Adding procedural terrain before finishing the basic renderer. Every feature outside the core vision delays everything inside it.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Fix: write a scope document. Say no to everything not in it.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Comparing to production engines</div>
+      <p>Comparing your 2,000-line platform layer to Godot's million-line codebase and feeling inadequate. Godot has 30+ years of combined developer time.</p>
+      <div class="callout callout-key" style="margin-top:8px"><p>Fix: compare to your past self, not to a team's output. Measure growth, not absolute size.</p></div>
+    </div>
+  </div>
+
+  <h3>What actually matters most</h3>
+  <div class="callout callout-ok">
+    <p><strong>Getting a game running on your engine matters more than the engine's architecture.</strong> An engine that has shipped one small game, however ugly, is infinitely more valuable than a beautiful architecture diagram for an engine with no game. The game is the validation.</p>
+  </div>
+
+  <h3>What can be skipped initially</h3>
+  <ul>
+    <li><strong>Physics engine:</strong> AABB collision is enough for Phases 0–4. Full rigid body only if your game requires it.</li>
+    <li><strong>Animation system:</strong> Simple frame-based sprite animation is fine for most game types. Skeletal animation is a significant implementation investment.</li>
+    <li><strong>Networking:</strong> Out of scope. Do not add it.</li>
+    <li><strong>Visual scripting:</strong> Text scripting first. Visual scripting is an editor feature, not an engine feature. Phase 6+ at earliest.</li>
+  </ul>
+
+  <h3>What to learn deeply — do not skip</h3>
+  <ul>
+    <li><strong>Memory management:</strong> Understanding allocation, fragmentation, and custom allocators is non-optional. Every other optimization depends on this.</li>
+    <li><strong>CPU architecture:</strong> Cache behavior, branch prediction, and SIMD are not optional extras — they are the core skill of this project.</li>
+    <li><strong>Profiling:</strong> If you haven't measured it, you don't know it's slow. Never optimize without a profile.</li>
+    <li><strong>Rasterization math:</strong> Perspective-correct interpolation, fill rules, subpixel precision. Getting this right is the renderer. Getting it wrong produces subtle bugs that haunt you forever.</li>
+  </ul>
+
+  <h3>Which optimizations are actually meaningful</h3>
+  <div class="two-col">
+    <div>
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-success);margin-bottom:8px">High impact — do these</div>
+      <ul>
+        <li>Frustum culling before rasterization — eliminates most triangles</li>
+        <li>Tile-based rendering — enables parallelism across cores</li>
+        <li>Binary asset format — eliminates load-time parsing cost</li>
+        <li>Arena allocators — eliminates malloc overhead in hot paths</li>
+        <li>SIMD rasterizer inner loop — 4–8× throughput on pixel processing</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-warning);margin-bottom:8px">Only with profile data</div>
+      <ul>
+        <li>Manual loop unrolling (compiler usually handles this)</li>
+        <li>Inline assembly (rarely better than intrinsics + compiler)</li>
+        <li>Branch hints without measurements</li>
+        <li>Micro-optimizing anything not in a measured hot path</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ S12 FINAL PATH ══════════════════════════════════════ -->
+<div class="sec" id="s11">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Section 12</div>
+    <div class="sec-title">Final Recommended Path</div>
+    <div class="sec-intro">The optimal approach for this specific engine — distilled to actionable decisions.</div>
+  </div>
+
+  <h3>Optimal first steps</h3>
+  <div class="card">
+    <ol>
+      <li><strong>Read "Computer Systems: A Programmer's Perspective" chapters 1–6.</strong> This is the foundation for everything else. The memory hierarchy chapter alone will change how you write code.</li>
+      <li><strong>Watch Handmade Hero episodes 1–20.</strong> Casey builds a platform layer and game loop from scratch. This directly maps to your Phase 0–1.</li>
+      <li><strong>Write a BMP file writer in C with zero libraries.</strong> ~100 lines. Forces you to understand file I/O, pixel formats, and the gap between "knowing C" and "writing systems code."</li>
+      <li><strong>SDL2 window + framebuffer blit + game loop.</strong> Your first running "engine." Measure frame time. Understand vsync.</li>
+      <li><strong>Pong.</strong> Build it completely. This is your Phase 1 graduation.</li>
+    </ol>
+  </div>
+
+  <h3>Ideal first playable demo</h3>
+  <div class="card">
+    <div class="card-title">A Wolfenstein 3D / Doom-style corridor shooter — 3–5 minutes of gameplay</div>
+    <p>Why this specific game type:</p>
+    <ul>
+      <li>Validates the entire software renderer (raycasting or BSP)</li>
+      <li>Requires ECS — player, enemies, pickups, doors</li>
+      <li>Requires audio — footsteps, gunshots, ambient</li>
+      <li>Requires a level format and basic editor</li>
+      <li>Runs at 320×240 upscaled — trivially within CPU rendering budget</li>
+      <li>Has a clear aesthetic that audiences immediately recognize and respect</li>
+      <li>Can be compiled to WASM for instant browser demos</li>
+    </ul>
+    <div class="callout callout-ok" style="margin-top:10px"><p>This demo, shared on itch.io with a technical blog post explaining the software renderer, is an extremely strong portfolio piece. It demonstrates: systems programming, graphics math, cross-platform engineering, and performance optimization — all in one artifact.</p></div>
+  </div>
+
+  <h3>Ideal first commercial-quality prototype</h3>
+  <div class="card">
+    <div class="card-title">A simulation / strategy game — a tiny RimWorld or Dwarf Fortress</div>
+    <p>Why this type validates a CPU-first engine better than any other:</p>
+    <ul>
+      <li>Simulation budget (pathfinding, AI, resource tracking) uses the CPU budget that would otherwise go to rendering</li>
+      <li>Visual style (pixel art, orthographic, or pseudo-3D) aligns with CPU rendering's natural aesthetic</li>
+      <li>Save/load, hot reload, and scripting systems all get tested</li>
+      <li>Demonstrates the engine is not just a renderer demo but a complete game development platform</li>
+    </ul>
+  </div>
+
+  <h3>Best long-term architecture choices</h3>
+  <div class="two-col">
+    <div>
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-success);margin-bottom:8px">Keep these</div>
+      <ul>
+        <li>Platform layer as the only platform-specific code</li>
+        <li>Arena allocators for all runtime allocations</li>
+        <li>Sparse-set ECS (upgrade to archetype when needed)</li>
+        <li>Binary asset format with offline build pipeline</li>
+        <li>Lua scripting over custom VM until Phase 8</li>
+        <li>Tile-based software renderer from the start</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-danger);margin-bottom:8px">Avoid these</div>
+      <ul>
+        <li>Complex inheritance hierarchies anywhere</li>
+        <li>Virtual functions in hot paths</li>
+        <li>Reference counting / smart pointers in game code</li>
+        <li>malloc / free in the game loop</li>
+        <li>Deeply nested callbacks for high-frequency events</li>
+        <li>Any feature without a concrete game use case</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>What should remain intentionally minimal</h3>
+  <div class="callout callout-info">
+    <p><strong>The editor.</strong> Build the minimum editor that enables game creation. A scene hierarchy + property inspector + asset browser is 90% of what game creation needs. The remaining 10% (visual scripting, animation editor, terrain tools) should be added only when a specific game requires it. Editor complexity is a black hole for solo engine development time.</p>
+  </div>
+  <ul>
+    <li><strong>The asset format:</strong> Simple binary header + raw data. Add versioning. Don't add complex schema evolution until you have multiple shipped games that need it.</li>
+    <li><strong>The scripting API:</strong> Expose only what game code needs. Every API endpoint is a maintenance obligation. Start small, expand from real game requirements.</li>
+    <li><strong>The physics system:</strong> AABB + swept collision for 90% of games. Add rigid body only when a game explicitly needs it.</li>
+    <li><strong>The audio system:</strong> PCM mixing of 32 voices. Add DSP effects only for games that use them. Do not build a general-purpose DSP graph for an engine where no game has yet needed one.</li>
+  </ul>
+
+  <h3>The most important thing</h3>
+  <div class="card" style="border-width:1px;border-color:var(--color-border-secondary)">
+    <p style="font-size:15px;line-height:1.75;color:var(--color-text-primary)">Ship a game. Not a demo. Not a renderer tech demo. A game, however small, with a start and an end, that someone else can play without your help. This single constraint will drive more engine design decisions than any architecture document ever written. The engine serves the game. If a system doesn't help you ship the game, it's not part of the engine yet. Every great engine grew from a game that needed it — not from a spec that predicted what a game would need.</p>
+  </div>
+
+  <div class="footer">
+    <p>CPU-First Game Engine · Master Engineering Curriculum · 12 sections · Built for deep understanding, not shortcuts</p>
+  </div>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.sec').forEach((s,j)=>s.classList.toggle('on',j===i));
+  document.querySelectorAll('.nb').forEach((b,j)=>b.classList.toggle('on',j===i));
+  window.scrollTo(0,0);
+}
+</script>

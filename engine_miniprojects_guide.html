@@ -1,0 +1,944 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary);font-size:14px;line-height:1.6}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.top{padding:20px 0 16px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:20px}
+.eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--color-text-tertiary);margin-bottom:5px}
+.doc-title{font-size:22px;font-weight:500;line-height:1.25;margin-bottom:6px}
+.doc-sub{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+
+.phase-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:24px}
+.pnb{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:transparent;color:var(--color-text-tertiary);cursor:pointer;transition:all .14s;white-space:nowrap}
+.pnb:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+
+.phase-view{display:none}
+.phase-view.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+.phase-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px;padding-bottom:18px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ph-badge{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.ph-title{font-size:18px;font-weight:500;line-height:1.25;margin-bottom:3px}
+.ph-sub{font-size:12px;color:var(--color-text-tertiary)}
+
+.section-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;margin-top:24px;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.section-label:first-of-type{margin-top:0}
+
+.proj-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.proj{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg,12px);padding:14px 16px}
+.proj-hed{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.proj-num{width:22px;height:22px;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--color-text-tertiary);flex-shrink:0}
+.proj-name{font-size:13.5px;font-weight:500;color:var(--color-text-primary);flex:1}
+.proj-diff{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.proj-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:8px}
+.proj-teaches{display:flex;flex-wrap:wrap;gap:4px}
+.teach-tag{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+
+.milestone{border-radius:var(--border-radius-lg,12px);padding:18px 20px;margin-top:8px}
+.ms-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ms-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ms-title{font-size:15px;font-weight:500;line-height:1.3}
+.ms-game{font-size:11px;font-weight:500;margin-top:2px;opacity:.75}
+.ms-desc{font-size:13px;line-height:1.65;margin-bottom:12px}
+.ms-reqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.req-block{background:rgba(255,255,255,.35);border-radius:8px;padding:10px 12px}
+.req-block-title{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;opacity:.7}
+.req-block ul{list-style:none;padding:0;margin:0}
+.req-block ul li{font-size:12px;line-height:1.55;padding:2px 0;opacity:.9}
+.req-block ul li::before{content:'— ';opacity:.5}
+
+.p0-col{background:#EEEDFE}
+.p0-ms{background:#EEEDFE;border:0.5px solid #AFA9EC}
+.p0-ms .ms-icon{background:#AFA9EC}
+.p0-ms .ms-title,.p0-ms .ms-desc,.p0-ms .req-block-title,.p0-ms .req-block ul li{color:#26215C}
+.p0-ms .ms-game{color:#534AB7}
+
+.p1-col{background:#E6F1FB}
+.p1-ms{background:#E6F1FB;border:0.5px solid #85B7EB}
+.p1-ms .ms-icon{background:#85B7EB}
+.p1-ms .ms-title,.p1-ms .ms-desc,.p1-ms .req-block-title,.p1-ms .req-block ul li{color:#042C53}
+.p1-ms .ms-game{color:#185FA5}
+
+.p2-col{background:#E1F5EE}
+.p2-ms{background:#E1F5EE;border:0.5px solid #5DCAA5}
+.p2-ms .ms-icon{background:#5DCAA5}
+.p2-ms .ms-title,.p2-ms .ms-desc,.p2-ms .req-block-title,.p2-ms .req-block ul li{color:#04342C}
+.p2-ms .ms-game{color:#0F6E56}
+
+.p3-col{background:#FAEEDA}
+.p3-ms{background:#FAEEDA;border:0.5px solid #EF9F27}
+.p3-ms .ms-icon{background:#EF9F27}
+.p3-ms .ms-title,.p3-ms .ms-desc,.p3-ms .req-block-title,.p3-ms .req-block ul li{color:#412402}
+.p3-ms .ms-game{color:#854F0B}
+
+.p4-col{background:#FAECE7}
+.p4-ms{background:#FAECE7;border:0.5px solid #F0997B}
+.p4-ms .ms-icon{background:#F0997B}
+.p4-ms .ms-title,.p4-ms .ms-desc,.p4-ms .req-block-title,.p4-ms .req-block ul li{color:#4A1B0C}
+.p4-ms .ms-game{color:#993C1D}
+
+.p5-col{background:#FBEAF0}
+.p5-ms{background:#FBEAF0;border:0.5px solid #ED93B1}
+.p5-ms .ms-icon{background:#ED93B1}
+.p5-ms .ms-title,.p5-ms .ms-desc,.p5-ms .req-block-title,.p5-ms .req-block ul li{color:#4B1528}
+.p5-ms .ms-game{color:#993556}
+
+.p6-col{background:#EAF3DE}
+.p6-ms{background:#EAF3DE;border:0.5px solid #97C459}
+.p6-ms .ms-icon{background:#97C459}
+.p6-ms .ms-title,.p6-ms .ms-desc,.p6-ms .req-block-title,.p6-ms .req-block ul li{color:#173404}
+.p6-ms .ms-game{color:#3B6D11}
+
+.p7-col{background:#F1EFE8}
+.p7-ms{background:#F1EFE8;border:0.5px solid #B4B2A9}
+.p7-ms .ms-icon{background:#B4B2A9}
+.p7-ms .ms-title,.p7-ms .ms-desc,.p7-ms .req-block-title,.p7-ms .req-block ul li{color:#2C2C2A}
+.p7-ms .ms-game{color:#5F5E5A}
+
+.easy{background:#EAF3DE;color:#27500A}
+.medium{background:#FAEEDA;color:#633806}
+.hard{background:#FAECE7;color:#712B13}
+
+code{font-family:var(--font-mono,monospace);font-size:11.5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+
+.footer{padding:18px 0 4px;border-top:0.5px solid var(--color-border-tertiary);margin-top:8px;text-align:center;font-size:11px;color:var(--color-text-tertiary)}
+</style>
+
+<h2 class="sr-only">CPU-first game engine mini-project guide: 5 mini-projects plus one game milestone per phase, covering all 8 learning phases from foundations to expert optimization.</h2>
+
+<div class="top">
+  <div class="eyebrow">Practice guide</div>
+  <div class="doc-title">Mini-projects &amp; milestones</div>
+  <div class="doc-sub">5 focused mini-projects per phase, plus one game milestone that ties it all together. Work through them in order — each one teaches what the next one needs.</div>
+</div>
+
+<nav class="phase-nav" id="pnav">
+  <button class="pnb on" onclick="show(0)">Phase 0 · Foundations</button>
+  <button class="pnb" onclick="show(1)">Phase 1 · Basic engine</button>
+  <button class="pnb" onclick="show(2)">Phase 2 · 3D rendering</button>
+  <button class="pnb" onclick="show(3)">Phase 3 · Engine core</button>
+  <button class="pnb" onclick="show(4)">Phase 4 · Performance</button>
+  <button class="pnb" onclick="show(5)">Phase 5 · Advanced</button>
+  <button class="pnb" onclick="show(6)">Phase 6 · Tooling</button>
+  <button class="pnb" onclick="show(7)">Phase 7 · Cross-platform</button>
+</nav>
+
+<!-- ══════════ PHASE 0 ══════════ -->
+<div class="phase-view on" id="p0">
+  <div class="phase-header">
+    <div class="ph-badge p0-col" style="color:#3C3489"><i class="ti ti-seedling" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 0 — Foundations</div>
+      <div class="ph-sub">Months 1–3 · C, memory, and systems thinking. No libraries. No shortcuts.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">BMP file writer from scratch</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Write a 24-bit BMP image file using only C file I/O — no libraries at all. Open a file, write the 54-byte BMP header manually by filling a struct with exact field values, then write a 256×256 grid of RGB pixels. Try rendering a gradient or a checkerboard pattern. The goal is to experience the gap between "knowing C" and "writing binary data correctly."</div>
+      <div class="proj-teaches"><span class="teach-tag">Binary file formats</span><span class="teach-tag">Structs as memory layouts</span><span class="teach-tag">Endianness</span><span class="teach-tag">Pixel color representation</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Dynamic array (growable buffer)</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Implement a <code>dynarray</code> in C that wraps a heap-allocated buffer: <code>push</code> appends an element and doubles capacity when full, <code>get</code> retrieves by index, <code>free</code> releases memory. Then implement the same thing but generic using <code>void*</code> and element size. Write tests that push 10,000 integers and verify all values are correct after retrieval.</div>
+      <div class="proj-teaches"><span class="teach-tag">Heap allocation</span><span class="teach-tag">Realloc strategy</span><span class="teach-tag">Generic C with void*</span><span class="teach-tag">Capacity doubling</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Hash map with open addressing</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Build a hash map that maps string keys to integer values. Use an array of buckets, a djb2 or FNV-1a hash function, and linear probing for collision resolution. Implement <code>insert</code>, <code>lookup</code>, and <code>delete</code>. Handle tombstone entries for deletion. Benchmark it against naive linear search for 10,000 lookups and confirm hash map wins at that count.</div>
+      <div class="proj-teaches"><span class="teach-tag">Hash functions</span><span class="teach-tag">Open addressing</span><span class="teach-tag">Load factor</span><span class="teach-tag">Tombstones</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Arena allocator</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Write an arena allocator that takes a large upfront buffer (e.g. 64 MB from <code>malloc</code>), maintains a single bump pointer, and hands out aligned chunks on request. Add a <code>reset()</code> that zeroes the pointer back to the start. Then benchmark it: allocate and reset 1,000,000 times and compare total time against the same number of <code>malloc/free</code> calls. Print the ratio.</div>
+      <div class="proj-teaches"><span class="teach-tag">Bump pointer</span><span class="teach-tag">Alignment</span><span class="teach-tag">Arena reset</span><span class="teach-tag">Allocation benchmarking</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">Read your own assembly output</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Write five short C functions: a loop summing an array, a struct copy, a function with and without <code>inline</code>, a branch that the compiler can simplify, and a pointer dereference chain. Compile each with <code>-O0</code> and <code>-O2</code> and look at the output on godbolt.org. Write a comment above each function explaining what changed and why. The goal is to demystify what the compiler actually produces.</div>
+      <div class="proj-teaches"><span class="teach-tag">x86-64 basics</span><span class="teach-tag">Compiler optimization</span><span class="teach-tag">Calling convention</span><span class="teach-tag">godbolt workflow</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p0-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#3C3489" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Software pixel canvas — animated color fields</div>
+        <div class="ms-game">Concept: a living screensaver / tech demo running fully on the CPU</div>
+      </div>
+    </div>
+    <div class="ms-desc">Using only C and your own BMP writer logic (adapted to write to a raw pixel buffer in memory), produce a 400×300 software pixel buffer that animates in real-time. No game loop library — manually use <code>clock()</code> or <code>QueryPerformanceCounter</code> to measure delta time. Draw at least three animated effects per frame: a sine-wave color gradient that shifts over time using a float <code>t</code> that increments each frame, a moving circle drawn by testing each pixel's distance from a center point that travels along a figure-eight path, and a "plasma" effect using nested sine functions of pixel x, y, and t. Output one BMP file per frame (frame_0001.bmp, frame_0002.bmp...) for the first 60 frames, then measure how long each frame took to produce using your arena allocator for any per-frame scratch data. Print the average frame time in milliseconds.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Must implement</div>
+        <ul>
+          <li>Pixel buffer as a flat <code>uint8_t</code> array (R, G, B packed)</li>
+          <li>High-resolution frame timer using OS clock API</li>
+          <li>Sine/cosine math for animation without <code>math.h</code> (use a lookup table)</li>
+          <li>Arena allocator for per-frame scratch memory</li>
+          <li>BMP output with correct 54-byte header, zero padding</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Success criteria</div>
+        <ul>
+          <li>60 BMP frames produced, each visually different</li>
+          <li>Average frame time printed to console</li>
+          <li>Code under 300 lines, zero libraries</li>
+          <li>No memory leaks (arena reset each frame)</li>
+          <li>You can explain every byte in the BMP header</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 1 ══════════ -->
+<div class="phase-view" id="p1">
+  <div class="phase-header">
+    <div class="ph-badge p1-col" style="color:#0C447C"><i class="ti ti-device-desktop" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 1 — Basic engine programming</div>
+      <div class="ph-sub">Months 3–6 · Platform layer, game loop, 2D software rendering, input.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">SDL2 window + game loop</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Create a window with SDL2, run a fixed-timestep game loop using SDL's high-resolution timer, and display the current FPS in the window title every second. The loop must accumulate elapsed time and run the update function in fixed 16.67ms increments — if the frame took 50ms, update runs 3 times then renders once. Measure and print the worst frame time observed over 10 seconds of idle running.</div>
+      <div class="proj-teaches"><span class="teach-tag">Fixed timestep</span><span class="teach-tag">Accumulator pattern</span><span class="teach-tag">SDL2 basics</span><span class="teach-tag">Frame timing</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Software 2D primitives renderer</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Write drawing functions that operate on your own <code>uint32_t</code> ARGB pixel buffer: <code>draw_rect</code> (filled), <code>draw_rect_outline</code>, <code>draw_circle</code> (filled, using the midpoint circle algorithm), <code>draw_line</code> (Bresenham's), and <code>draw_pixel</code>. Blit the buffer to the SDL window each frame using SDL_UpdateTexture. Animate each shape with different motion paths to visually verify correctness.</div>
+      <div class="proj-teaches"><span class="teach-tag">Bresenham's line</span><span class="teach-tag">Midpoint circle</span><span class="teach-tag">Framebuffer layout</span><span class="teach-tag">SDL texture blit</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Input system with event queue</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Build an input layer that polls SDL events each frame and fills a struct with: boolean arrays for key-down, key-pressed-this-frame, and key-released-this-frame states for every key, plus mouse position (absolute and delta), and mouse button states. Key-pressed-this-frame must be true for exactly one frame after a key is first held. Test it by rendering the state of WASD and arrow keys visually as colored boxes on screen — green when held, blue on the exact first frame pressed, gray when released.</div>
+      <div class="proj-teaches"><span class="teach-tag">Event polling</span><span class="teach-tag">Input state vs edge detection</span><span class="teach-tag">Frame-boundary state reset</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Sprite sheet animation player</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Load a PNG sprite sheet (using stb_image — this is a pipeline tool, it's allowed here). Define an animation as a struct: number of frames, frame width/height, frame duration in seconds, and loop flag. Write a software blitter that copies the correct region of the sprite sheet into the framebuffer each frame with transparency (skip pixels where alpha = 0). Implement at least 3 named animations (idle, walk, run) and switch between them with key presses, with no visible pop between loops.</div>
+      <div class="proj-teaches"><span class="teach-tag">Sprite atlas</span><span class="teach-tag">Alpha blending</span><span class="teach-tag">Animation state machine</span><span class="teach-tag">stb_image loading</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">AABB collision detection</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Implement axis-aligned bounding box collision: an overlap test that returns true/false, and a minimum-translation-vector (MTV) calculation that returns the smallest displacement to push two overlapping boxes apart. Create a scene with 20 moving rectangles bouncing around, all colliding correctly with walls and each other. Visualize MTV as a colored arrow. Then implement swept AABB: given a moving box and a static box, find the exact time of first contact (0.0–1.0 fraction of the frame) so fast-moving objects don't tunnel through thin walls.</div>
+      <div class="proj-teaches"><span class="teach-tag">AABB overlap</span><span class="teach-tag">MTV resolution</span><span class="teach-tag">Swept collision</span><span class="teach-tag">Tunneling prevention</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p1-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#0C447C" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Breakout — a complete, polished arcade game</div>
+        <div class="ms-game">Concept: classic brick-breaker with lives, score, multiple levels, game states</div>
+      </div>
+    </div>
+    <div class="ms-desc">Build a complete Breakout game where the player controls a paddle to bounce a ball into bricks. This is not a prototype — it is a finished game with a clear start, play, and end. Every system must be wired together correctly: input drives the paddle, physics moves the ball, collision detection breaks bricks and bounces correctly off every surface, and game state transitions work cleanly. A random stranger should be able to pick it up and play without instructions.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Gameplay systems</div>
+        <ul>
+          <li>Paddle responds to left/right keys with smooth acceleration and deceleration, not instant velocity</li>
+          <li>Ball bounces off paddle, walls, and bricks with correct angle reflection using the surface normal</li>
+          <li>Bricks take 1 or 2 hits to break depending on type — color-coded visually</li>
+          <li>Ball speeds up slightly every 5 bricks broken</li>
+          <li>3 lives — ball lost when it falls off screen, game over when lives reach 0</li>
+          <li>Level ends when all bricks are cleared — next level loads with a new layout and faster starting speed</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Technical requirements</div>
+        <ul>
+          <li>Game states: title screen, countdown (3-2-1-GO), playing, paused (Esc), level clear, game over — all rendered differently</li>
+          <li>Score displayed with digit sprites or software-drawn text, increases per brick type broken</li>
+          <li>High score persisted to a binary file, loaded at startup</li>
+          <li>All rendering is software (your pixel buffer), no SDL_RenderDraw calls</li>
+          <li>Collision resolution uses swept AABB — no tunneling at any speed</li>
+          <li>Stable 60 fps measured with your frame timer, printed on screen in debug mode</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Code quality</div>
+        <ul>
+          <li>Under 1,500 lines of C total</li>
+          <li>Game state is a plain struct — no global variables</li>
+          <li>Asset loading separated from game logic (load function vs update function)</li>
+          <li>Zero dynamic allocation during gameplay — all state pre-allocated at level load</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 2 ══════════ -->
+<div class="phase-view" id="p2">
+  <div class="phase-header">
+    <div class="ph-badge p2-col" style="color:#085041"><i class="ti ti-cube" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 2 — Software 3D rendering</div>
+      <div class="ph-sub">Months 6–12 · Rasterization, perspective, texture mapping, 3D pipelines.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Triangle rasterizer with depth buffer</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Implement a scanline triangle rasterizer entirely in 2D first: given three 2D vertices and a color, fill all pixels inside the triangle correctly including the flat-top and flat-bottom sub-cases. Add a float depth buffer (same resolution as framebuffer, initialized to 1.0). For each pixel, interpolate a Z value linearly across the triangle and only write the pixel if its Z is less than the current depth buffer value. Test by rendering 500 randomly positioned triangles and confirming correct depth ordering.</div>
+      <div class="proj-teaches"><span class="teach-tag">Scanline rasterization</span><span class="teach-tag">Depth buffer</span><span class="teach-tag">Barycentric interpolation</span><span class="teach-tag">Fill rules</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">3D perspective transform pipeline</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Implement a complete vertex transform pipeline in C: a 4×4 matrix library (multiply, transpose, inverse), and functions that construct a model matrix (translation, rotation, scale), a view matrix from eye/target/up vectors, and a perspective projection matrix from FOV, aspect, near, and far. Chain them: model × view × projection, transform a list of 3D vertices, divide by W to get NDC, then map to screen space. Visualize a spinning wireframe cube to verify correctness.</div>
+      <div class="proj-teaches"><span class="teach-tag">Mat4 math</span><span class="teach-tag">View/projection matrices</span><span class="teach-tag">Perspective divide</span><span class="teach-tag">NDC to screen space</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Perspective-correct texture mapping</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Add UV coordinates to your triangle vertices. First implement incorrect affine texture mapping (linear UV interpolation in screen space) and save a screenshot. Then implement correct perspective-division: divide UV by W at each vertex, interpolate the divided values linearly across the triangle, then multiply back by interpolated 1/W at each pixel. Load a checkerboard texture and render a large oblique quad. The visual difference between the two approaches on a diagonal quad is dramatic and immediately demonstrates why the extra math matters.</div>
+      <div class="proj-teaches"><span class="teach-tag">Perspective-correct interpolation</span><span class="teach-tag">UV mapping</span><span class="teach-tag">Affine vs perspective error</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Wolfenstein-style raycaster</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Build a classic grid-based raycaster: a 2D tile map where 1 = wall, 0 = floor. For each screen column, cast a ray from the player position in the view direction, find the wall hit using DDA (Digital Differential Analysis), compute the wall height from the distance, and draw a vertical column of pixels. Use a simple color ramp (darker = farther) for walls. Add a 2D minimap overlay in the corner. Support free WASD movement and mouse-look for rotation. Target 60 fps at 640×400.</div>
+      <div class="proj-teaches"><span class="teach-tag">DDA ray casting</span><span class="teach-tag">Column-based rendering</span><span class="teach-tag">Fisheye correction</span><span class="teach-tag">2D minimap</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">OBJ loader and flat-shaded renderer</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Write a minimal OBJ file parser that reads vertex positions and face indices. Load a free low-poly mesh (a monkey head, a teapot, or a skull). Compute the face normal for each triangle using the cross product of two edges. Shade each face flat using a single directional light: dot product of face normal with light direction gives the brightness. Backface cull faces pointing away from the camera. Render the model spinning. Aim for zero flickering — correct depth buffer usage is mandatory.</div>
+      <div class="proj-teaches"><span class="teach-tag">OBJ parsing</span><span class="teach-tag">Face normals</span><span class="teach-tag">Flat shading</span><span class="teach-tag">Backface culling</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p2-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#085041" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Corridor crawler — a textured first-person dungeon</div>
+        <div class="ms-game">Concept: Wolfenstein 3D / early Doom — first-person, textured walls, enemies, an exit</div>
+      </div>
+    </div>
+    <div class="ms-desc">Build a first-person dungeon crawler using your raycaster. The player navigates a hand-designed tile map, finds a key, and reaches an exit. There are 3 enemy types that patrol, chase the player when in range, and deal damage on contact. The goal is a complete, winnable, loseable 3-minute experience that demonstrates your full rendering pipeline working together in a real game context.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Rendering</div>
+        <ul>
+          <li>Textured walls using your perspective-correct UV mapper — each wall tile uses a different texture region from a 256×256 atlas</li>
+          <li>Floor and ceiling rendered as horizontal spans using distance-based texture sampling</li>
+          <li>Sprites (enemies, items, doors) rendered as billboards sorted back-to-front and depth-tested against the wall buffer</li>
+          <li>Distance fog: walls and sprites darken linearly with distance (colormap lookup table, Doom-style)</li>
+          <li>Weapon bob animation in the lower-center of the screen — a sprite that sways with player movement speed</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Gameplay</div>
+        <ul>
+          <li>Player: WASD movement, mouse horizontal look, one attack action (keyboard or mouse button)</li>
+          <li>3 enemy types: patroller (fixed path), chaser (pathfinds to player when visible), shooter (fires a slow projectile)</li>
+          <li>Health bar and collected-key indicator rendered as HUD sprites on the framebuffer</li>
+          <li>Door tiles that open when the player has the key and presses use (E key)</li>
+          <li>Game over when health reaches 0, win screen when player reaches exit tile</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Technical bar</div>
+        <ul>
+          <li>60 fps at 640×400 on a 2015-era machine</li>
+          <li>All rendering is your software rasterizer — no GPU draw calls</li>
+          <li>Enemy AI uses simple BFS or A* on the tile grid — not random wandering</li>
+          <li>Sprites correctly occlude and are occluded by walls using the wall distance buffer</li>
+          <li>Level defined in a plain text file (1=wall, 0=floor, 2=enemy, 3=exit etc.)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 3 ══════════ -->
+<div class="phase-view" id="p3">
+  <div class="phase-header">
+    <div class="ph-badge p3-col" style="color:#633806"><i class="ti ti-topology-star" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 3 — Modern engine core</div>
+      <div class="ph-sub">Months 12–18 · ECS, asset pipeline, audio, scripting, job system.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Sparse-set ECS from scratch</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Implement a sparse-set ECS: entities are 32-bit integer IDs. Each component type (Transform, Velocity, Health) has a sparse array (indexed by entity ID, containing the dense index) and a dense array of component data. Implement <code>entity_create</code>, <code>entity_destroy</code>, <code>component_add</code>, <code>component_remove</code>, and <code>component_get</code>. Then write a "query" that iterates over all entities that have both Transform and Velocity, and a separate query for Transform and Health. Benchmark: 100,000 entities, full iteration of both queries per frame, measure microseconds.</div>
+      <div class="proj-teaches"><span class="teach-tag">Sparse set</span><span class="teach-tag">Dense/sparse arrays</span><span class="teach-tag">Component iteration</span><span class="teach-tag">ECS query</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Binary asset pipeline</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Write a standalone command-line tool (<code>asset_cook</code>) that converts PNG files to your own <code>.tex</code> format (a 16-byte header: magic number, width, height, format enum, then raw RGBA bytes) and OBJ files to your own <code>.mesh</code> format (a 24-byte header, then interleaved float arrays of position/UV/normal). Write a runtime loader that <code>mmap</code>s or <code>fread</code>s the binary directly into a struct with no parsing. Measure load time for a 512×512 texture: raw PNG parse vs your binary format. Target: 10× faster.</div>
+      <div class="proj-teaches"><span class="teach-tag">Binary format design</span><span class="teach-tag">Asset pipeline tooling</span><span class="teach-tag">mmap vs fread</span><span class="teach-tag">Load time measurement</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">PCM audio mixer</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Use miniaudio in callback mode — the library calls your function every ~10ms requesting N samples. In that callback, mix up to 32 active sound "voices" by summing their PCM samples into the output buffer with clamping. Each voice has: a raw PCM buffer, current playback position, volume (0.0–1.0), pitch (implemented as sample rate scaling), and a loop flag. Test with 8 simultaneous looping sounds at different volumes. Confirm there's no crackling (buffer underrun) by stressing with 32 voices at once.</div>
+      <div class="proj-teaches"><span class="teach-tag">PCM mixing</span><span class="teach-tag">Audio callback model</span><span class="teach-tag">Voice management</span><span class="teach-tag">Sample rate</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Thread pool + work queue</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Build a thread pool: N worker threads (start with hardware_concurrency − 1) all blocking on a semaphore. The main thread pushes "jobs" (a function pointer + void* data) into a lock-protected queue, then signals the semaphore. Workers wake, pop a job, execute it, and decrement a pending counter. A <code>thread_pool_wait</code> function blocks the main thread until the pending counter reaches zero. Test by splitting a 4000×4000 pixel fill operation into 16 horizontal strips processed in parallel — measure vs single-threaded.</div>
+      <div class="proj-teaches"><span class="teach-tag">Thread pool</span><span class="teach-tag">Semaphore signaling</span><span class="teach-tag">Job queue</span><span class="teach-tag">Parallel speedup measurement</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">Lua scripting integration</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Embed LuaJIT into your engine. Expose 6 functions to Lua via the C API: <code>entity_create()</code>, <code>entity_get_pos(id)</code>, <code>entity_set_pos(id, x, y)</code>, <code>input_key_down(key)</code>, <code>audio_play(sound_name)</code>, and <code>log(message)</code>. Write a Lua script that creates 10 entities, moves them each frame based on input, and plays a sound when they reach the edge. Test that changing the Lua script behavior requires zero C recompilation. Add a file watcher that reloads the script on save.</div>
+      <div class="proj-teaches"><span class="teach-tag">Lua C API</span><span class="teach-tag">LuaJIT embedding</span><span class="teach-tag">Scripting bindings</span><span class="teach-tag">Hot reload basics</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p3-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#633806" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Top-down action RPG prototype</div>
+        <div class="ms-game">Concept: Zelda-like — overworld, enemies, loot, a boss room, save/load</div>
+      </div>
+    </div>
+    <div class="ms-desc">Build a top-down action RPG prototype using your ECS as the backbone for every game object. The player explores a tile-based overworld, fights enemies, collects items, and defeats a boss to win. All enemy behaviors are defined in Lua scripts hot-reloaded without restarting. All assets are loaded from your binary pipeline. Audio plays on combat and collection. This milestone proves that your engine core can support a real game with multiple interacting systems.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">ECS usage</div>
+        <ul>
+          <li>Every game object is an entity — player, enemy, item, projectile, tile</li>
+          <li>Components: Transform, Velocity, Health, Sprite, Collider, AIState, Inventory</li>
+          <li>Systems: MovementSystem, CollisionSystem, AISystem, RenderSystem, AudioSystem — all iterate ECS queries</li>
+          <li>Entities created/destroyed at runtime with zero dynamic allocation (from pre-allocated pool)</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Gameplay</div>
+        <ul>
+          <li>Player movement with 8-direction sprite animation (4 directions × idle/walk frames)</li>
+          <li>Melee attack: hitbox spawned for 3 frames in front of player, damages any enemy in range</li>
+          <li>3 enemy types with Lua-scripted behaviors, editable live while game runs</li>
+          <li>Item drops (health, speed boost) collected by walking over them</li>
+          <li>Boss room triggered by touching a door tile — boss has phase 2 when health &lt; 50%</li>
+          <li>Save/load: binary file stores player position, health, inventory, and cleared-room flags</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Technical bar</div>
+        <ul>
+          <li>All assets from binary pipeline — no PNG or OBJ parsed at runtime</li>
+          <li>Audio: footsteps, attack sounds, enemy hurt, item pickup, boss music loop</li>
+          <li>60 fps with 200 simultaneous entities on target hardware</li>
+          <li>Lua script change → visible in-game in under 2 seconds without restart</li>
+          <li>Level defined in a plain text tile map file loadable by the engine</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 4 ══════════ -->
+<div class="phase-view" id="p4">
+  <div class="phase-header">
+    <div class="ph-badge p4-col" style="color:#712B13"><i class="ti ti-bolt" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 4 — Performance engineering</div>
+      <div class="ph-sub">Months 18–24 · Profiling, SIMD, cache optimization, tile rendering.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Instrumented profiler overlay</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Build a lightweight in-engine profiler: a macro <code>PROFILE_BEGIN("zone name")</code> that records the current high-resolution timestamp and pushes a named entry onto a stack, and <code>PROFILE_END()</code> that pops it and records elapsed time. At the end of each frame, render a horizontal bar chart in the corner of the screen showing the last 60 frames, color-coded by zone. Highlight frames that exceeded 16.67ms in red. Add a toggle key to show/hide the overlay. Do not use Tracy yet — this exercise teaches you how profilers work.</div>
+      <div class="proj-teaches"><span class="teach-tag">Custom profiler design</span><span class="teach-tag">High-res timers</span><span class="teach-tag">Frame history visualization</span><span class="teach-tag">Zone stack</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">SIMD 4-wide vector math</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Write a SIMD math library using SSE2 intrinsics: <code>vec4_add</code>, <code>vec4_mul</code>, <code>vec4_dot</code> (horizontal add), <code>vec4_normalize</code>. Then write a function that processes an array of 10,000 vec3 positions — normalize each one and add a constant offset — using both scalar and SIMD implementations. Measure both with your profiler. Then extend it: process 4 vec3s simultaneously packed as SoA (arrays of x, y, z separately) using SSE2 — this is the pattern that makes your ECS fast. Document the measured speedup.</div>
+      <div class="proj-teaches"><span class="teach-tag">SSE2 intrinsics</span><span class="teach-tag">SIMD vec4 ops</span><span class="teach-tag">SoA SIMD pattern</span><span class="teach-tag">Speedup measurement</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Tile-based multithreaded rasterizer</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Refactor your rasterizer to work tile-by-tile: divide the screen into 64×64 pixel tiles. In a preprocessing pass, bin each triangle into the tiles it overlaps (compute bounding box, iterate tiles it touches, push triangle index into that tile's list). Then dispatch one job per tile to your thread pool — each worker rasterizes all triangles in its tile independently into a local tile buffer, then copies to the main framebuffer. Measure single-threaded vs 4-thread vs 8-thread performance on a scene with 5,000 triangles.</div>
+      <div class="proj-teaches"><span class="teach-tag">Tile binning</span><span class="teach-tag">Parallel rasterization</span><span class="teach-tag">Thread pool dispatch</span><span class="teach-tag">Scalability measurement</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Frustum culling system</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Extract the 6 frustum planes from the camera's view-projection matrix using the standard plane extraction formula. Write an AABB-vs-frustum test: for each of the 6 planes, find the "positive vertex" of the AABB (the corner most in the direction of the plane normal) and test if it's behind the plane. If any plane rejects the AABB, the object is culled. Add this as a system that runs before rasterization. Create a scene with 1,000 objects where 90% are behind the camera — verify that culling reduces rasterization work to near-zero in that case.</div>
+      <div class="proj-teaches"><span class="teach-tag">Frustum plane extraction</span><span class="teach-tag">AABB frustum test</span><span class="teach-tag">Culling before rasterization</span><span class="teach-tag">Draw call reduction</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">SoA ECS component layout</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Refactor your Transform and Velocity components from AoS (one struct per entity) to SoA (separate arrays for x, y, z of position and velocity). Update the movement system to iterate over the separate arrays rather than a struct array. Benchmark both layouts with 100,000 entities running the full movement update (add velocity × dt to position each frame). Use your profiler to capture cache-miss behavior — run the test with and without <code>_mm_prefetch</code> calls ahead of the hot loop. Document findings.</div>
+      <div class="proj-teaches"><span class="teach-tag">SoA layout</span><span class="teach-tag">Cache performance</span><span class="teach-tag">Prefetch instructions</span><span class="teach-tag">AoS vs SoA benchmark</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p4-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#712B13" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Software-rendered FPS — a Quake-like level with 1,000 enemies</div>
+        <div class="ms-game">Concept: prove that your optimized engine runs a meaningful scene on potato hardware</div>
+      </div>
+    </div>
+    <div class="ms-desc">Port or upgrade your Phase 2 corridor crawler to use your full performance stack: tile-based multithreaded rasterizer, SIMD math, frustum culling, binary asset pipeline, and ECS. Load a BSP-style level with multiple rooms. Populate it with 1,000 enemy entities (most invisible/culled at any given time). This milestone is a benchmark exercise as much as a game — the deliverable is a game that demonstrably runs on weak hardware, with profiler screenshots proving it.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Performance targets</div>
+        <ul>
+          <li>60 fps stable at 640×400 with 1,000 active enemy entities on a 4-core 2015-era machine</li>
+          <li>Frustum culling eliminates 80%+ of draw calls — verified by a visible counter</li>
+          <li>Tile rasterizer uses all available cores — CPU utilization shown in profiler</li>
+          <li>Zero dynamic allocation during gameplay loop — verified with your debug allocator</li>
+          <li>Frame time breakdown: render / simulation / audio shown in profiler overlay</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Gameplay</div>
+        <ul>
+          <li>First-person movement through a multi-room level (at least 8 rooms)</li>
+          <li>Enemies activate (start chasing) when the player enters their room</li>
+          <li>Projectile weapon that fires into the scene, correctly hitting enemies via ray-vs-AABB</li>
+          <li>Kill counter displayed on HUD</li>
+          <li>Level loops — when all enemies are dead, the level resets with a higher spawn count</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Deliverable</div>
+        <ul>
+          <li>A recorded profiler session exported as a screenshot showing frame breakdown</li>
+          <li>A before/after comparison: same scene with optimizations disabled vs enabled</li>
+          <li>A 200-word written summary of what you changed, why, and what the measured impact was</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 5 ══════════ -->
+<div class="phase-view" id="p5">
+  <div class="phase-header">
+    <div class="ph-badge p5-col" style="color:#72243E"><i class="ti ti-code-dots" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 5 — Advanced systems</div>
+      <div class="ph-sub">Months 24–32 · Physics, fiber jobs, bytecode VM, reflection, save systems.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Rigid body physics engine</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Implement a 2D rigid body physics engine from scratch: bodies have position, velocity, angular velocity, mass, moment of inertia, and a collider shape (AABB or circle). Each frame: integrate forces (gravity, applied forces) into velocity using semi-implicit Euler, detect collision pairs using broad phase (uniform grid) then narrow phase (SAT for AABB-AABB, distance for circle-circle), resolve collisions using impulse resolution with restitution and friction coefficients. Simulate a stack of 20 boxes falling and settling. Correctness is more important than performance at this stage.</div>
+      <div class="proj-teaches"><span class="teach-tag">Impulse resolution</span><span class="teach-tag">SAT collision</span><span class="teach-tag">Angular dynamics</span><span class="teach-tag">Broad/narrow phase</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Fiber-based job scheduler</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Implement a fiber job scheduler (lightweight cooperative coroutines for job switching): create N fibers per thread using platform fiber APIs (<code>CreateFiber</code> on Windows, <code>makecontext</code> on POSIX). Jobs are C functions pushed into a lock-free MPSC queue. When a job calls <code>job_wait(counter)</code>, the fiber yields back to the scheduler fiber and picks up a new job instead of blocking the thread. Implement a <code>JobCounter</code> that reaches zero when all child jobs complete, waking the waiting fiber. Test by splitting a ray-casting scene into one job per screen row — verify all rows complete before the frame advances.</div>
+      <div class="proj-teaches"><span class="teach-tag">Fibers / coroutines</span><span class="teach-tag">Cooperative scheduling</span><span class="teach-tag">Job dependency</span><span class="teach-tag">Lock-free queue</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Simple bytecode virtual machine</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Write a stack-based bytecode VM in ~600 lines of C. Opcodes: PUSH_INT, PUSH_FLOAT, POP, ADD, SUB, MUL, DIV, CALL (index into a function table of C callbacks), JUMP_IF_ZERO (for if/else), JUMP (for loops), RETURN. Write bytecode by hand as a byte array to implement: a function that computes N steps of a bounce simulation (position += velocity; if position &gt; max then velocity *= -1) and calls a C callback each step to update an entity's position. Benchmark vs equivalent Lua code — your VM will be slower than LuaJIT, and that's instructive.</div>
+      <div class="proj-teaches"><span class="teach-tag">Stack-based VM</span><span class="teach-tag">Bytecode dispatch</span><span class="teach-tag">Opcode design</span><span class="teach-tag">VM vs interpreter comparison</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">Reflection system with code generation</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Write a Python script that parses C struct definitions marked with a <code>// REFLECT</code> comment, extracts field names and types, and generates a C file containing a <code>TypeInfo</code> struct for each reflected type: an array of <code>FieldInfo</code> (name string, offset, type enum, size). Use this in two ways: implement a generic <code>serialize_to_binary(void* obj, TypeInfo* ti, FILE* f)</code> that writes all fields without manual code per type, and a <code>debug_print_struct(void* obj, TypeInfo* ti)</code> that prints each field's name and value. Test with your Transform and Entity components.</div>
+      <div class="proj-teaches"><span class="teach-tag">Code generation</span><span class="teach-tag">Reflection via offsets</span><span class="teach-tag">Generic serialization</span><span class="teach-tag">Python as build tool</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">Versioned save/load system</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Design a binary save format with a version field in the header. Implement save: iterate all entities that have a <code>Saveable</code> component flag, serialize their selected components to a binary file using your reflection system. Implement load: read the version, then use a migration table — if the file is version 1 and the engine is version 2, apply a migration function that maps old field layout to new. Test with a deliberate breaking change: rename a struct field, bump the version, write the migration, and verify old saves still load correctly.</div>
+      <div class="proj-teaches"><span class="teach-tag">Binary save format</span><span class="teach-tag">Schema versioning</span><span class="teach-tag">Migration functions</span><span class="teach-tag">Save/load correctness testing</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p5-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#72243E" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Physics platformer — a complete 2D action game with persistence</div>
+        <div class="ms-game">Concept: Super Mario Bros / Celeste — tight controls, physics, levels, save checkpoints</div>
+      </div>
+    </div>
+    <div class="ms-desc">Build a complete 2D platformer using your rigid body physics engine, fiber job scheduler (for physics sub-steps), and versioned save system. The player navigates through 3 hand-designed levels, each with hazards, enemies, and a collectible. The game saves checkpoint progress automatically. This milestone demonstrates that your advanced systems work in harmony — not just in isolation.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Physics &amp; movement</div>
+        <ul>
+          <li>Player runs physics through your rigid body engine — coyote time (6 frames), jump buffering (8 frames), variable jump height (hold = higher)</li>
+          <li>Colliders defined in the level file — static AABB platforms, one-way platforms (pass through from below)</li>
+          <li>Moving platform entities driven by physics, carrying the player when standing on them</li>
+          <li>Physics runs at fixed 120Hz sub-stepped using fiber jobs — rendering interpolates between states</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Game systems</div>
+        <ul>
+          <li>3 enemy types: walker (patrols edge-to-edge), bouncer (follows parabolic arcs), turret (fires aimed projectile every 2s)</li>
+          <li>Collectibles spawn in fixed positions, counted per level (3/5 collected style display)</li>
+          <li>Death: respawn at last checkpoint with 0.5s invincibility flash</li>
+          <li>Level transitions with a 0.3s fade-to-black using a global alpha overlay on the framebuffer</li>
+          <li>Time-per-level tracked and displayed at level end — complete time displayed at game end</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Save system &amp; quality</div>
+        <ul>
+          <li>Save file written on checkpoint touch, level clear, and quit — loaded on startup</li>
+          <li>Save stores: current level, checkpoint index, collectible flags (bitfield), total time</li>
+          <li>Save format version 1 — add one field (high score name), bump to version 2, migrate correctly</li>
+          <li>Stable 60 fps with physics sub-stepping running on fiber scheduler</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 6 ══════════ -->
+<div class="phase-view" id="p6">
+  <div class="phase-header">
+    <div class="ph-badge p6-col" style="color:#27500A"><i class="ti ti-layout" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 6 — Tooling &amp; editor</div>
+      <div class="ph-sub">Months 32–40 · Level editor, asset browser, property inspector, in-engine UI.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Immediate-mode UI renderer</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Implement a minimal immediate-mode UI library in C: functions called each frame that draw directly to the framebuffer — <code>ui_label(x, y, text)</code>, <code>ui_button(x, y, w, h, label) → bool</code>, <code>ui_slider(x, y, w, min, max, &amp;value) → bool</code>, <code>ui_checkbox(x, y, label, &amp;checked) → bool</code>. State is stored in a small context struct (hot item ID, active item ID). Buttons return true on mouse-up if hot. Render a debug panel with 5 sliders controlling live parameters (player speed, gravity, render resolution, fog density, audio volume) in a running game — changes should be immediate.</div>
+      <div class="proj-teaches"><span class="teach-tag">Immediate-mode UI pattern</span><span class="teach-tag">Hot/active item model</span><span class="teach-tag">Software text rendering</span><span class="teach-tag">Live parameter editing</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Entity inspector panel</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Using your reflection system and immediate-mode UI, build an entity inspector: click any entity in the running game, and a panel appears showing all its components by name. For each component, show all reflected fields with their current values. Editable fields (floats, ints, bools) are shown as sliders or checkboxes — changing them updates the live entity immediately. String fields are read-only labels. The inspector reads from your ECS using the TypeInfo table, so it automatically handles any new component type you reflect — zero manual inspector code per type.</div>
+      <div class="proj-teaches"><span class="teach-tag">Reflection-driven UI</span><span class="teach-tag">Runtime entity editing</span><span class="teach-tag">Generic property panels</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">Tile map editor</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Build an in-engine tile map editor mode toggled with F1. The editor shows the tile map as a grid overlaid on the game view, with a palette of tile types on the right. Left-click paints the selected tile, right-click erases, middle-click pans the view. Add an entity placement tool: select an entity type from a list, click to place it in the tile map. Save the tile map to your binary level format. Load it back in play mode without restarting. The same level file must work in both editor and play mode — no separate formats.</div>
+      <div class="proj-teaches"><span class="teach-tag">In-engine editor mode</span><span class="teach-tag">Grid rendering</span><span class="teach-tag">Entity placement</span><span class="teach-tag">Live level editing</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">In-game console with command system</div>
+        <span class="proj-diff easy">Easy</span>
+      </div>
+      <div class="proj-desc">Implement a drop-down console toggled with the tilde key (~). It renders as a translucent overlay over the game, with a scrollable output log and a text input line at the bottom. A command registry maps string command names to C function pointers with string argument parsing. Implement at least 8 built-in commands: <code>spawn [entity_type]</code>, <code>kill [entity_id]</code>, <code>set [component] [field] [value]</code>, <code>tp [x] [y]</code>, <code>timescale [0.0–2.0]</code>, <code>noclip</code>, <code>screenshot</code>, and <code>clear</code>. Add tab-completion for command names.</div>
+      <div class="proj-teaches"><span class="teach-tag">Command registry pattern</span><span class="teach-tag">String parsing</span><span class="teach-tag">Tab completion</span><span class="teach-tag">Debug overlay</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">Asset browser with live preview</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Build an asset browser panel: scan the asset directory for all <code>.tex</code> and <code>.mesh</code> binary files, display them as a scrollable list with icons indicating type. Clicking a texture shows a preview thumbnail (scale it down to 64×64 using nearest-neighbor sampling and render it in the panel). Clicking a mesh shows its triangle count, vertex count, and bounding box size. Double-clicking a texture immediately replaces the selected entity's texture component in the running game — demonstrating live asset swapping without restart.</div>
+      <div class="proj-teaches"><span class="teach-tag">Directory scanning</span><span class="teach-tag">Thumbnail generation</span><span class="teach-tag">Live asset swap</span><span class="teach-tag">Asset metadata display</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p6-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#27500A" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Design a full game level without touching code</div>
+        <div class="ms-game">Concept: the editor as proof — a non-programmer could build a playable level in 30 minutes</div>
+      </div>
+    </div>
+    <div class="ms-desc">The milestone is not a specific game — it is a proof that your editor tooling is complete enough for actual level design iteration. Build a level for your Phase 3 RPG prototype entirely using the editor: tile map editor, entity placement, property inspector to configure enemies and items. Use the console to tweak values, the asset browser to swap textures, and the profiler overlay to confirm performance. Then hand the editor to someone who has never seen the codebase and ask them to build a small room with enemies and an exit.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Editor completeness</div>
+        <ul>
+          <li>Tile map editor: paint, erase, pan, zoom, undo last 20 actions (circular undo buffer)</li>
+          <li>Entity placement: place any entity type, see its AABB in editor, delete it</li>
+          <li>Inspector: edit all reflected component fields on any placed entity</li>
+          <li>Console: 8+ working commands including timescale and spawn</li>
+          <li>Profiler overlay: frame time, zone breakdown, FPS counter</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Workflow test</div>
+        <ul>
+          <li>Design-to-playtest cycle: open editor → paint level → place entities → press F1 to play → test → F1 back to edit → adjust → repeat — all without restarting</li>
+          <li>Level saved and reloaded correctly across restarts</li>
+          <li>A second person can use the editor with no verbal instruction beyond "F1 toggles editor"</li>
+          <li>Any crash or data loss during the test is a failure — the editor must be stable</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PHASE 7 ══════════ -->
+<div class="phase-view" id="p7">
+  <div class="phase-header">
+    <div class="ph-badge p7-col" style="color:#444441"><i class="ti ti-world" style="font-size:20px" aria-hidden="true"></i></div>
+    <div>
+      <div class="ph-title">Phase 7 — Cross-platform &amp; Web</div>
+      <div class="ph-sub">Months 40–48 · WASM, Linux/macOS ports, tiny executables, CI/CD.</div>
+    </div>
+  </div>
+
+  <div class="section-label">5 mini-projects</div>
+  <div class="proj-list">
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">1</div>
+        <div class="proj-name">Emscripten WASM port</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Compile your Phase 1 Breakout game to WebAssembly using Emscripten. The main loop must use <code>emscripten_set_main_loop</code> instead of a blocking while loop. The framebuffer blit must use SDL2's Emscripten backend or a canvas 2D context. Audio must work (use the Emscripten SDL2 audio backend). The game must load in under 3 seconds on a standard connection and run at 60 fps in Chrome and Firefox. All assets must be embedded using Emscripten's virtual file system. Measure WASM binary size and document what flags reduce it most.</div>
+      <div class="proj-teaches"><span class="teach-tag">Emscripten toolchain</span><span class="teach-tag">WASM main loop model</span><span class="teach-tag">Virtual file system</span><span class="teach-tag">WASM binary size</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">2</div>
+        <div class="proj-name">Platform abstraction layer</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Extract all OS-specific code into a platform layer interface — a single header declaring: <code>platform_window_create</code>, <code>platform_blit</code>, <code>platform_get_input</code>, <code>platform_get_time_ns</code>, <code>platform_file_read</code>, <code>platform_thread_create</code>, <code>platform_mutex_*</code>, <code>platform_semaphore_*</code>. Implement this interface for Windows (Win32 + WASAPI or SDL2), Linux (X11 or SDL2 + ALSA), and WASM (SDL2 Emscripten). Build all three with a single CMake command. Every function above the platform layer is now identical across all three targets — verify with a CI matrix.</div>
+      <div class="proj-teaches"><span class="teach-tag">Platform abstraction</span><span class="teach-tag">Win32 / POSIX / WASM APIs</span><span class="teach-tag">Interface design</span><span class="teach-tag">Cross-compilation</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">3</div>
+        <div class="proj-name">CI/CD build matrix</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Set up a GitHub Actions workflow that builds your engine on Windows (MSVC + Clang), Linux (GCC + Clang), macOS (Clang), and WASM (Emscripten) on every push to main. Each build must pass with zero warnings at -Wall -Wextra. Add a test step that runs a headless mode (no window, render 100 frames to a buffer, compare a checksum against a reference) to catch rendering regressions. Badge the README with build status. The goal is that every platform breaks immediately if you accidentally introduce a portability bug.</div>
+      <div class="proj-teaches"><span class="teach-tag">GitHub Actions matrix</span><span class="teach-tag">Headless testing</span><span class="teach-tag">Checksum regression tests</span><span class="teach-tag">Warning hygiene</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">4</div>
+        <div class="proj-name">LTO + strip + size reduction</div>
+        <span class="proj-diff medium">Medium</span>
+      </div>
+      <div class="proj-desc">Take your Phase 1 Breakout game and minimize the shipping executable size: enable Link-Time Optimization (<code>-flto</code>), strip debug symbols (<code>strip</code>), use <code>-Os</code> optimization for size over speed, disable exceptions and RTTI (<code>-fno-exceptions -fno-rtti</code>), replace all CRT usage with direct syscalls for the simplest functions. Measure binary size at each step and document the contribution of each optimization. Target: under 500KB for the Windows executable, under 200KB for the WASM binary. Use a tool like <code>bloaty</code> or <code>nm --size-sort</code> to see what occupies the binary.</div>
+      <div class="proj-teaches"><span class="teach-tag">LTO</span><span class="teach-tag">Binary size analysis</span><span class="teach-tag">-Os vs -O2</span><span class="teach-tag">Symbol stripping</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-hed">
+        <div class="proj-num">5</div>
+        <div class="proj-name">macOS Metal framebuffer blit</div>
+        <span class="proj-diff hard">Hard</span>
+      </div>
+      <div class="proj-desc">Implement a macOS-specific platform backend that opens a Metal-backed NSWindow, uploads the CPU framebuffer as a Metal texture each frame, and draws it as a fullscreen quad using a trivial fragment shader that just samples the texture. This replaces SDL2's software blit on macOS with a Metal blit — the GPU only does the final display upscale, all rendering is still on CPU. Measure: blit time (Metal texture upload + draw) vs SDL2 software blit at 1920×1080 output from a 640×360 source. Metal should win significantly on Apple Silicon.</div>
+      <div class="proj-teaches"><span class="teach-tag">Metal API basics</span><span class="teach-tag">Texture upload</span><span class="teach-tag">Upscale blit</span><span class="teach-tag">GPU-accelerated display</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase milestone</div>
+  <div class="milestone p7-ms">
+    <div class="ms-top">
+      <div class="ms-icon"><i class="ti ti-device-gamepad-2" style="font-size:18px;color:#444441" aria-hidden="true"></i></div>
+      <div>
+        <div class="ms-title">Ship a real game — an itch.io release that plays in the browser</div>
+        <div class="ms-game">Concept: the engine's ultimate test — a playable, shareable, documented game release</div>
+      </div>
+    </div>
+    <div class="ms-desc">Take your best game from a previous phase (Phase 2 dungeon crawler or Phase 3 RPG) and release it publicly on itch.io. The WASM build plays directly in the browser — no download required. The Windows and Linux builds are downloadable. Write a short technical devlog (500 words) explaining that the game runs on a CPU-first software-rendered engine, what that means, and what hardware it targets. This is your public portfolio entry — it must be stable, complete, and documented.</div>
+    <div class="ms-reqs">
+      <div class="req-block">
+        <div class="req-block-title">Release requirements</div>
+        <ul>
+          <li>WASM build plays in Chrome and Firefox with no install — load time under 5 seconds on average connection</li>
+          <li>Windows .exe and Linux binary downloadable from itch.io page</li>
+          <li>Game has a title screen, a clear win/lose condition, and working audio</li>
+          <li>All three builds built from CI — the release is automated, not manual</li>
+          <li>Executable sizes: Windows under 1 MB, WASM under 500 KB</li>
+        </ul>
+      </div>
+      <div class="req-block">
+        <div class="req-block-title">Documentation &amp; portfolio</div>
+        <ul>
+          <li>GitHub repository with a clear README: what the engine is, how to build it, what it targets</li>
+          <li>Technical devlog post on itch.io page explaining the CPU-first renderer</li>
+          <li>One screenshot of the profiler overlay showing stable frame times</li>
+          <li>A "building this engine" blog post or video — the educational journey is part of the project</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">CPU-First Engine — Mini-projects &amp; milestones guide · 8 phases · 40 mini-projects · 8 game milestones</div>
+
+<script>
+var phases=['p0','p1','p2','p3','p4','p5','p6','p7'];
+function show(i){
+  phases.forEach(function(id,j){
+    document.getElementById(id).classList.toggle('on',j===i);
+  });
+  document.querySelectorAll('.pnb').forEach(function(b,j){
+    b.classList.toggle('on',j===i);
+    b.style.background=j===i?'var(--color-text-primary)':'';
+    b.style.color=j===i?'var(--color-background-primary)':'';
+    b.style.borderColor=j===i?'transparent':'';
+  });
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.pnb').forEach(function(b,i){
+  b.addEventListener('click',function(){show(i)});
+});
+show(0);
+</script>
